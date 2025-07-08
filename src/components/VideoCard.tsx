@@ -27,6 +27,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -123,17 +124,18 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
             <Button
               onClick={() => {
                 if (videoRef.current) {
-                  const currentSpeed = videoRef.current.playbackRate;
-                  const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-                  const currentIndex = speeds.indexOf(currentSpeed);
+                  const speeds = [1, 1.25, 1.5, 1.75, 2];
+                  const currentIndex = speeds.indexOf(playbackSpeed);
                   const nextIndex = (currentIndex + 1) % speeds.length;
-                  videoRef.current.playbackRate = speeds[nextIndex];
+                  const newSpeed = speeds[nextIndex];
+                  videoRef.current.playbackRate = newSpeed;
+                  setPlaybackSpeed(newSpeed);
                 }
               }}
               size="sm"
               className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 px-2 py-1 text-xs"
             >
-              {videoRef.current ? `${videoRef.current.playbackRate}x` : '1x'}
+              {playbackSpeed}x
             </Button>
           </div>
           <div className="text-sm opacity-75">{video.duration}</div>

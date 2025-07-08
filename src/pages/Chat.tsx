@@ -145,8 +145,8 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white pb-16">
-      <div className="relative w-full max-w-sm mx-auto min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white pb-16 overflow-hidden">
+      <div className="relative w-full max-w-sm mx-auto min-h-screen flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/20 backdrop-blur-sm">
           <Button

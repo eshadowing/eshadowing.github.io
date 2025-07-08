@@ -123,7 +123,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       {/* Content */}
       <div className="relative h-full flex flex-col justify-between p-6 text-white">
         {/* Top Section */}
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start pt-2">
           <div className="flex items-center gap-2">
             <div className="bg-blue-600/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
               {video.difficulty}

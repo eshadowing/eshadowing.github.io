@@ -167,6 +167,16 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
       </div>
       
+      {/* Video Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/20">
+        <div 
+          className="h-full bg-white transition-all duration-100"
+          style={{ 
+            width: videoRef.current ? `${(currentTime / videoRef.current.duration) * 100 || 0}%` : '0%' 
+          }}
+        />
+      </div>
+      
       {/* Social Actions - positioned at right center */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-10">
         <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors"

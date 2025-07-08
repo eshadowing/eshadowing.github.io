@@ -118,6 +118,30 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
             <h3 className="text-xl font-bold leading-tight">{video.title}</h3>
             <p className="text-sm opacity-90 leading-relaxed">{video.description}</p>
           </div>
+          
+          {/* Video Progress Bar - positioned after content */}
+          <div className="mt-4">
+            <div 
+              className="relative h-1 bg-white/20 rounded-full cursor-pointer"
+              onClick={(e) => {
+                if (videoRef.current) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickX = e.clientX - rect.left;
+                  const percentage = clickX / rect.width;
+                  const newTime = percentage * videoRef.current.duration;
+                  videoRef.current.currentTime = newTime;
+                  setCurrentTime(newTime);
+                }
+              }}
+            >
+              <div 
+                className="h-full bg-white rounded-full transition-all duration-100"
+                style={{ 
+                  width: videoRef.current ? `${(currentTime / videoRef.current.duration) * 100 || 0}%` : '0%' 
+                }}
+              />
+            </div>
+          </div>
 
           {/* Controls */}
           <div className="flex items-center justify-between gap-3">
@@ -126,29 +150,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
       </div>
       
-      {/* Interactive Video Progress Bar */}
-      <div className="absolute bottom-28 left-0 right-0 z-30 px-6">
-        <div 
-          className="relative h-1 bg-white/20 rounded-full cursor-pointer"
-          onClick={(e) => {
-            if (videoRef.current) {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const clickX = e.clientX - rect.left;
-              const percentage = clickX / rect.width;
-              const newTime = percentage * videoRef.current.duration;
-              videoRef.current.currentTime = newTime;
-              setCurrentTime(newTime);
-            }
-          }}
-        >
-          <div 
-            className="h-full bg-white rounded-full transition-all duration-100"
-            style={{ 
-              width: videoRef.current ? `${(currentTime / videoRef.current.duration) * 100 || 0}%` : '0%' 
-            }}
-          />
-        </div>
-      </div>
       
       {/* Social Actions - positioned at right center */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-10">

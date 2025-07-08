@@ -169,29 +169,24 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       
       {/* Social Actions - positioned at right center */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-10">
-        <Button
-          onClick={handleLike}
-          size="sm"
-          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full w-12 h-12 flex flex-col items-center justify-center p-0"
-        >
-          <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-          <span className="text-xs font-medium mt-0.5">{likesCount}</span>
-        </Button>
+        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors"
+             onClick={handleLike}>
+          <div className="flex flex-col items-center justify-center gap-0">
+            <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+            <span className="text-xs font-medium leading-none">{likesCount}</span>
+          </div>
+        </div>
         
-        <Button
-          size="sm"
-          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full w-12 h-12 flex flex-col items-center justify-center p-0"
-        >
-          <MessageCircle className="w-5 h-5 text-white" />
-          <span className="text-xs font-medium mt-0.5">{commentsCount}</span>
-        </Button>
+        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors">
+          <div className="flex flex-col items-center justify-center gap-0">
+            <MessageCircle className="w-5 h-5 text-white" />
+            <span className="text-xs font-medium leading-none">{commentsCount}</span>
+          </div>
+        </div>
         
-        <Button
-          size="sm"
-          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full w-12 h-12 flex items-center justify-center p-0"
-        >
+        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors">
           <Share className="w-5 h-5 text-white" />
-        </Button>
+        </div>
       </div>
     </div>
   );

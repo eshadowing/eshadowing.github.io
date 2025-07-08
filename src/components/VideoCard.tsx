@@ -167,14 +167,28 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
       </div>
       
-      {/* Video Progress Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/20">
+      {/* Interactive Video Progress Bar */}
+      <div className="absolute bottom-16 left-0 right-0 z-30 px-4">
         <div 
-          className="h-full bg-white transition-all duration-100"
-          style={{ 
-            width: videoRef.current ? `${(currentTime / videoRef.current.duration) * 100 || 0}%` : '0%' 
+          className="relative h-1 bg-white/20 rounded-full cursor-pointer"
+          onClick={(e) => {
+            if (videoRef.current) {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickX = e.clientX - rect.left;
+              const percentage = clickX / rect.width;
+              const newTime = percentage * videoRef.current.duration;
+              videoRef.current.currentTime = newTime;
+              setCurrentTime(newTime);
+            }
           }}
-        />
+        >
+          <div 
+            className="h-full bg-white rounded-full transition-all duration-100"
+            style={{ 
+              width: videoRef.current ? `${(currentTime / videoRef.current.duration) * 100 || 0}%` : '0%' 
+            }}
+          />
+        </div>
       </div>
       
       {/* Social Actions - positioned at right center */}

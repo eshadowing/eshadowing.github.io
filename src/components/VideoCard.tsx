@@ -27,13 +27,15 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
 
   useEffect(() => {
     if (videoRef.current) {
-      if (isActive && isPlaying) {
+      if (isActive) {
+        setIsPlaying(true);
         videoRef.current.play();
       } else {
+        setIsPlaying(false);
         videoRef.current.pause();
       }
     }
-  }, [isActive, isPlaying]);
+  }, [isActive]);
 
   const togglePlay = () => {
     if (videoRef.current) {

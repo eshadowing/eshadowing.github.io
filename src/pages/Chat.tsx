@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, Send, Plus, Mic, MicOff, Volume2 } from 'lucide-react';
+import { ArrowLeft, Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
@@ -40,10 +40,7 @@ const Chat = () => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [customTopic, setCustomTopic] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -55,9 +52,9 @@ const Chat = () => {
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        setNewMessage(transcript);
+        handleVoiceMessage(transcript);
         setIsListening(false);
       };
 
@@ -80,7 +77,6 @@ const Chat = () => {
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-    speakText(welcomeMessage.text);
   };
 
   const handleCustomTopic = () => {
@@ -96,74 +92,38 @@ const Chat = () => {
     }
   };
 
-  const speakText = async (text: string) => {
-    if (!apiKey) {
-      setShowApiKeyInput(true);
-      return;
-    }
-
-    try {
-      const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/9BWtsMINqrJLrRacOk9x', {
-        method: 'POST',
-        headers: {
-          'Accept': 'audio/mpeg',
-          'Content-Type': 'application/json',
-          'xi-api-key': apiKey
-        },
-        body: JSON.stringify({
-          text: text,
-          model_id: 'eleven_multilingual_v2',
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
-        })
-      });
-
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.play();
-      }
-    } catch (error) {
-      console.error('Error with text-to-speech:', error);
-    }
-  };
-
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const userMessage: Message = {
-        id: Date.now(),
-        text: newMessage,
-        isUser: true,
+  const handleVoiceMessage = (transcript: string) => {
+    const userMessage: Message = {
+      id: Date.now(),
+      text: transcript,
+      isUser: true,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Mock bot response
+    setTimeout(() => {
+      const responses = [
+        "That's a fascinating perspective! Can you elaborate on that?",
+        "I see what you mean. Tell me more about your experience with this.",
+        "That's really interesting! What made you think about it that way?",
+        "Great point! How do you think we could apply this in practice?",
+        "I understand. What challenges have you faced with this topic?",
+        "Excellent observation! How did you come to that conclusion?",
+        "That sounds intriguing. Can you share more details about that?",
+        "Very thoughtful! What's your next step with this idea?"
+      ];
+      
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      const botResponse: Message = {
+        id: Date.now() + 1,
+        text: randomResponse,
+        isUser: false,
         timestamp: new Date()
       };
-      
-      setMessages(prev => [...prev, userMessage]);
-      setNewMessage('');
-      
-      // Mock bot response
-      setTimeout(() => {
-        const responses = [
-          "That's a fascinating perspective! Can you elaborate on that?",
-          "I see what you mean. Tell me more about your experience with this.",
-          "That's really interesting! What made you think about it that way?",
-          "Great point! How do you think we could apply this in practice?",
-          "I understand. What challenges have you faced with this topic?"
-        ];
-        
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        const botResponse: Message = {
-          id: Date.now() + 1,
-          text: randomResponse,
-          isUser: false,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, botResponse]);
-        speakText(botResponse.text);
-      }, 1000);
-    }
+      setMessages(prev => [...prev, botResponse]);
+    }, 1500);
   };
 
   const handleVoiceInput = () => {
@@ -178,11 +138,7 @@ const Chat = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      if (customTopic && !selectedTopic) {
-        handleCustomTopic();
-      } else {
-        handleSendMessage();
-      }
+      handleCustomTopic();
     }
   };
 
@@ -206,79 +162,36 @@ const Chat = () => {
                 <h1 className="text-lg font-semibold">{selectedTopic.title}</h1>
               </>
             )}
-            {!selectedTopic && <h1 className="text-lg font-semibold">AI Chat</h1>}
+            {!selectedTopic && <h1 className="text-lg font-semibold">AI Voice Chat</h1>}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowApiKeyInput(!showApiKeyInput)}
-            className="text-white hover:bg-white/10"
-          >
-            <Volume2 className="w-4 h-4" />
-          </Button>
+          <div className="w-8" />
         </div>
 
-        {/* API Key Input */}
-        {showApiKeyInput && (
-          <div className="p-4 bg-black/40 border-b border-white/10">
-            <div className="space-y-2">
-              <label className="text-xs text-gray-300">ElevenLabs API Key for voice</label>
+        {/* Search Bar - Only visible when no topic selected */}
+        {!selectedTopic && (
+          <div className="p-4 border-b border-white/10 bg-black/10">
+            <div className="flex gap-2">
               <Input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your ElevenLabs API key..."
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-xs"
+                value={customTopic}
+                onChange={(e) => setCustomTopic(e.target.value)}
+                placeholder="Enter a topic..."
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                onKeyPress={handleKeyPress}
               />
-            </div>
-          </div>
-        )}
-
-        {/* Search Bar - Always visible */}
-        <div className="p-4 border-b border-white/10 bg-black/10">
-          <div className="flex gap-2">
-            <Input
-              value={customTopic}
-              onChange={(e) => setCustomTopic(e.target.value)}
-              placeholder={selectedTopic ? "Type your message..." : "Enter a topic or search..."}
-              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-              onKeyPress={handleKeyPress}
-            />
-            {!selectedTopic ? (
               <Button
                 onClick={handleCustomTopic}
                 size="sm"
                 className="bg-blue-600 hover:bg-blue-700"
+                disabled={!customTopic.trim()}
               >
-                <Plus className="w-4 h-4" />
+                Start
               </Button>
-            ) : (
-              <div className="flex gap-1">
-                <Button
-                  onClick={handleVoiceInput}
-                  size="sm"
-                  className={`${isListening ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
-                >
-                  {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setNewMessage(customTopic);
-                    setCustomTopic('');
-                    setTimeout(handleSendMessage, 100);
-                  }}
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-24">
           {!selectedTopic ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3">
@@ -320,9 +233,34 @@ const Chat = () => {
                   </div>
                 </div>
               ))}
+              
+              {isListening && (
+                <div className="flex justify-center">
+                  <div className="bg-red-600/20 backdrop-blur-sm text-white border border-red-500/30 rounded-xl px-4 py-2">
+                    <p className="text-sm animate-pulse">Listening...</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
+
+        {/* Mic Button - Only show when topic is selected */}
+        {selectedTopic && (
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+            <Button
+              onClick={handleVoiceInput}
+              size="lg"
+              className={`w-16 h-16 rounded-full ${
+                isListening 
+                  ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } shadow-lg`}
+            >
+              {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -116,8 +116,25 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       <div className="relative h-full flex flex-col justify-between p-6 text-white">
         {/* Top Section */}
         <div className="flex justify-between items-start">
-          <div className="bg-blue-600/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
-            {video.difficulty}
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-600/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+              {video.difficulty}
+            </div>
+            <Button
+              onClick={() => {
+                if (videoRef.current) {
+                  const currentSpeed = videoRef.current.playbackRate;
+                  const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+                  const currentIndex = speeds.indexOf(currentSpeed);
+                  const nextIndex = (currentIndex + 1) % speeds.length;
+                  videoRef.current.playbackRate = speeds[nextIndex];
+                }
+              }}
+              size="sm"
+              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 px-2 py-1 text-xs"
+            >
+              {videoRef.current ? `${videoRef.current.playbackRate}x` : '1x'}
+            </Button>
           </div>
           <div className="text-sm opacity-75">{video.duration}</div>
         </div>

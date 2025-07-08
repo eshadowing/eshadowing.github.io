@@ -194,7 +194,7 @@ const Chat = () => {
 
         {/* Content Area */}
         <div className="flex-1 pb-24">
-          {(!selectedTopic && isSearchFocused) ? (
+          {(!selectedTopic || (selectedTopic && isSearchFocused)) ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3">
               <h2 className="text-sm font-medium text-gray-300">Popular Topics</h2>

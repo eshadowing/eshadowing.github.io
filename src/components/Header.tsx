@@ -14,14 +14,14 @@ const Header = () => {
           <Button 
             size="sm" 
             onClick={() => setIsSubtitlesOn(!isSubtitlesOn)}
-            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full"
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full w-9 h-9"
           >
             <Captions className={`w-4 h-4 ${isSubtitlesOn ? 'text-blue-400' : 'text-white'}`} />
           </Button>
           <Button 
             size="sm" 
             onClick={() => setIsVolumeOn(!isVolumeOn)}
-            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full"
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full w-9 h-9"
           >
             {isVolumeOn ? (
               <Volume2 className="w-4 h-4 text-blue-400" />
@@ -32,7 +32,7 @@ const Header = () => {
         </div>
         <Button 
           size="sm" 
-          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full"
+          className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full w-9 h-9"
         >
           <Settings className="w-4 h-4 text-white" />
         </Button>

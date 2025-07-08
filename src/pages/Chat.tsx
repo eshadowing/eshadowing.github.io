@@ -42,6 +42,7 @@ const Chat = () => {
   const [customTopic, setCustomTopic] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isListening, setIsListening] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -177,6 +178,8 @@ const Chat = () => {
               placeholder="Enter a topic..."
               className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               onKeyPress={handleKeyPress}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
             <Button
               onClick={handleCustomTopic}
@@ -191,7 +194,7 @@ const Chat = () => {
 
         {/* Content Area */}
         <div className="flex-1 pb-24">
-          {!selectedTopic ? (
+          {(!selectedTopic && isSearchFocused) ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3">
               <h2 className="text-sm font-medium text-gray-300">Popular Topics</h2>

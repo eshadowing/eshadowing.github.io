@@ -3,6 +3,7 @@ import { useState } from 'react';
 import SwipeContainer from '@/components/SwipeContainer';
 import VideoCard from '@/components/VideoCard';
 import Header from '@/components/Header';
+import BottomNav from '@/components/BottomNav';
 import { sampleVideos } from '@/data/sampleVideos';
 
 const Index = () => {
@@ -16,7 +17,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-black flex justify-center">
       {/* Mobile Container */}
-      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden">
+      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden pb-16">
         <Header />
         
         <SwipeContainer onSwipe={handleSwipe}>
@@ -28,6 +29,8 @@ const Index = () => {
             />
           ))}
         </SwipeContainer>
+        
+        <BottomNav />
       </div>
       
       {/* Desktop Side Padding */}

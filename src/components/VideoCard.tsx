@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Mic, Square, Volume2, Heart, MessageCircle, Share } from 'lucide-react';
+import { Volume2, Heart, MessageCircle, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface VideoCardProps {
@@ -18,15 +18,11 @@ interface VideoCardProps {
 
 const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [hasRecorded, setHasRecorded] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(42);
   const [commentsCount, setCommentsCount] = useState(8);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
   useEffect(() => {
@@ -64,44 +60,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      
-      const chunks: BlobPart[] = [];
-      mediaRecorder.ondataavailable = (event) => {
-        chunks.push(event.data);
-      };
-      
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/wav' });
-        setRecordedBlob(blob);
-        setHasRecorded(true);
-      };
-      
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-      setIsRecording(false);
-    }
-  };
-
-  const playRecording = () => {
-    if (recordedBlob) {
-      const audio = new Audio(URL.createObjectURL(recordedBlob));
-      audio.play();
-    }
-  };
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl overflow-hidden shadow-2xl">
@@ -163,32 +121,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
 
           {/* Controls */}
           <div className="flex items-center justify-between gap-3">
-            {/* Left side - Recording Controls */}
-            <div className="flex items-center gap-2">
-              {hasRecorded && (
-                <Button
-                  onClick={playRecording}
-                  size="sm"
-                  className="bg-green-600/80 backdrop-blur-sm hover:bg-green-600 border-0 rounded-full p-2"
-                >
-                  <Volume2 className="w-4 h-4" />
-                </Button>
-              )}
-              
-              <Button
-                onClick={isRecording ? stopRecording : startRecording}
-                size="lg"
-                className={`${
-                  isRecording 
-                    ? 'bg-red-600/80 hover:bg-red-600' 
-                    : 'bg-blue-600/80 hover:bg-blue-600'
-                } backdrop-blur-sm border-0 rounded-full p-3 ${
-                  isRecording ? 'animate-pulse' : ''
-                }`}
-              >
-                {isRecording ? <Square className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </Button>
-            </div>
+            {/* Left side - No recording controls needed anymore */}
           </div>
         </div>
       </div>

@@ -8,10 +8,17 @@ import { sampleVideos } from '@/data/sampleVideos';
 
 const Index = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleSwipe = (direction: 'up' | 'down', newIndex: number) => {
     setActiveVideoIndex(newIndex);
     console.log(`Swiped ${direction} to video ${newIndex + 1}`);
+  };
+
+  const handleMicClick = () => {
+    setIsRecording(!isRecording);
+    // Add your recording logic here
+    console.log(`Recording ${!isRecording ? 'started' : 'stopped'}`);
   };
 
   return (
@@ -30,7 +37,11 @@ const Index = () => {
           ))}
         </SwipeContainer>
         
-        <BottomNav />
+        <BottomNav 
+          showMicButton={true}
+          isListening={isRecording}
+          onMicClick={handleMicClick}
+        />
       </div>
       
       {/* Desktop Side Padding */}

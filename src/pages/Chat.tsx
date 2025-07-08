@@ -247,24 +247,12 @@ const Chat = () => {
           )}
         </div>
 
-        {/* Mic Button - Only show when topic is selected */}
-        {selectedTopic && (
-          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
-            <Button
-              onClick={handleVoiceInput}
-              size="lg"
-              className={`w-16 h-16 rounded-full ${
-                isListening 
-                  ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
-                  : 'bg-blue-600 hover:bg-blue-700'
-              } shadow-lg`}
-            >
-              {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-            </Button>
-          </div>
-        )}
       </div>
-      <BottomNav />
+      <BottomNav 
+        showMicButton={!!selectedTopic}
+        isListening={isListening}
+        onMicClick={handleVoiceInput}
+      />
     </div>
   );
 };

@@ -173,14 +173,14 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
              onClick={handleLike}>
           <div className="flex flex-col items-center justify-center gap-0">
             <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-            <span className="text-xs font-medium leading-none">{likesCount}</span>
+            <span className="text-xs font-medium leading-none text-white">{likesCount}</span>
           </div>
         </div>
         
         <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors">
           <div className="flex flex-col items-center justify-center gap-0">
             <MessageCircle className="w-5 h-5 text-white" />
-            <span className="text-xs font-medium leading-none">{commentsCount}</span>
+            <span className="text-xs font-medium leading-none text-white">{commentsCount}</span>
           </div>
         </div>
         

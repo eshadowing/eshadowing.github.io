@@ -33,13 +33,20 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     if (videoRef.current) {
       if (isActive) {
         setIsPlaying(true);
-        videoRef.current.play();
+        videoRef.current.play().catch(console.error);
       } else {
         setIsPlaying(false);
         videoRef.current.pause();
       }
     }
   }, [isActive]);
+
+  // Reset speed when video changes
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -130,6 +137,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
                   const newSpeed = speeds[nextIndex];
                   videoRef.current.playbackRate = newSpeed;
                   setPlaybackSpeed(newSpeed);
+                  console.log(`Speed changed to ${newSpeed}x`);
                 }
               }}
               size="sm"
@@ -138,7 +146,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
               {playbackSpeed}x
             </Button>
           </div>
-          <div className="text-sm opacity-75">{video.duration}</div>
         </div>
 
         {/* Bottom Section */}
@@ -187,7 +194,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       </div>
       
       {/* Interactive Video Progress Bar */}
-      <div className="absolute bottom-16 left-0 right-0 z-30 px-4">
+      <div className="absolute bottom-2 left-0 right-0 z-30 px-4">
         <div 
           className="relative h-1 bg-white/20 rounded-full cursor-pointer"
           onClick={(e) => {

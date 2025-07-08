@@ -122,7 +122,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           {/* Video Progress Bar - positioned after content */}
           <div className="mt-4 mb-12">
             <div 
-              className="relative h-1 bg-white/20 rounded-full cursor-pointer z-50"
+              className="relative h-1 bg-white/20 rounded-full cursor-pointer"
               onClick={(e) => {
                 if (videoRef.current) {
                   const rect = e.currentTarget.getBoundingClientRect();

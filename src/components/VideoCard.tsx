@@ -127,7 +127,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       </div>
       
       {/* Interactive Video Progress Bar */}
-      <div className="absolute bottom-20 left-0 right-0 z-30 px-4">
+      <div className="absolute bottom-24 left-0 right-0 z-30 px-4">
         <div 
           className="relative h-1 bg-white/20 rounded-full cursor-pointer"
           onClick={(e) => {

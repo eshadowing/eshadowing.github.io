@@ -19,11 +19,11 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30">
+    <div className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none">
       {/* Elevated Mic Button - Positioned above the nav */}
       {showMicButton && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 -top-6 z-10">
-          <div className="relative">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -top-6 z-10 pointer-events-auto">
+          <div className="relative pointer-events-auto">
             {/* Glow effect */}
             <div className={`absolute inset-0 rounded-full blur-lg transition-all duration-300 ${
               isListening 
@@ -57,8 +57,8 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
       )}
       
       {/* Bottom Navigation */}
-      <div className="bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-lg">
-        <div className="flex justify-around items-center py-3 max-w-sm mx-auto">
+      <div className="bg-black/95 backdrop-blur-xl border-t border-white/10 shadow-lg pointer-events-auto">
+        <div className="flex justify-around items-center py-3 max-w-sm mx-auto pointer-events-auto">
           {navItems.slice(0, 2).map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;

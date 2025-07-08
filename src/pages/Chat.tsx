@@ -218,7 +218,7 @@ const Chat = () => {
             </div>
           ) : (
             /* Messages - Show when topic is selected */
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 overflow-y-auto">
               {messages.map((message) => (
                 <div
                   key={message.id}

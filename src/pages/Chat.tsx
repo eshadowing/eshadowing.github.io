@@ -168,31 +168,29 @@ const Chat = () => {
           <div className="w-8" />
         </div>
 
-        {/* Search Bar - Only visible when no topic selected */}
-        {!selectedTopic && (
-          <div className="p-4 border-b border-white/10 bg-black/10">
-            <div className="flex gap-2">
-              <Input
-                value={customTopic}
-                onChange={(e) => setCustomTopic(e.target.value)}
-                placeholder="Enter a topic..."
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                onKeyPress={handleKeyPress}
-              />
-              <Button
-                onClick={handleCustomTopic}
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
-                disabled={!customTopic.trim()}
-              >
-                Start
-              </Button>
-            </div>
+        {/* Search Bar - Always visible */}
+        <div className="p-4 border-b border-white/10 bg-black/10">
+          <div className="flex gap-2">
+            <Input
+              value={customTopic}
+              onChange={(e) => setCustomTopic(e.target.value)}
+              placeholder="Enter a topic..."
+              className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+              onKeyPress={handleKeyPress}
+            />
+            <Button
+              onClick={handleCustomTopic}
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700"
+              disabled={!customTopic.trim()}
+            >
+              Start
+            </Button>
           </div>
-        )}
+        </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto pb-24">
+        <div className="flex-1 pb-24">
           {!selectedTopic ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3">

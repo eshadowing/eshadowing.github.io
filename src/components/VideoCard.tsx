@@ -108,15 +108,15 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
 
         {/* Bottom Section */}
         <div className="space-y-4">
-          {/* Video Info */}
+          {/* Transcript - Now on top */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4">
+            <p className="text-sm leading-relaxed font-medium">{video.transcript}</p>
+          </div>
+          
+          {/* Video Info - Now below transcript */}
           <div className="space-y-2">
             <h3 className="text-xl font-bold leading-tight">{video.title}</h3>
             <p className="text-sm opacity-90 leading-relaxed">{video.description}</p>
-          </div>
-
-          {/* Transcript */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4">
-            <p className="text-sm leading-relaxed font-medium">{video.transcript}</p>
           </div>
 
           {/* Controls */}

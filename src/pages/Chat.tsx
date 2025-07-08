@@ -193,7 +193,7 @@ const Chat = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 pb-24">
+        <div className="flex-1 pb-24 overflow-hidden">
           {(!selectedTopic || (selectedTopic && isSearchFocused)) ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3">

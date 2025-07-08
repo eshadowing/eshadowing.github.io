@@ -1,6 +1,7 @@
 import { Upload, Users, Video, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { sampleVideos } from '@/data/sampleVideos';
 import BottomNav from '@/components/BottomNav';
 
 const Profile = () => {
@@ -58,18 +59,27 @@ const Profile = () => {
           </Card>
         </div>
 
-        {/* Recent Activity */}
+        {/* Your Videos */}
         <div className="p-4">
-          <h3 className="text-lg font-semibold mb-3">Recent Activity</h3>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                  <Video className="w-4 h-4 text-blue-400" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-medium">Coffee Shop Conversation</div>
-                  <div className="text-xs text-white/60">2 hours ago</div>
+          <h3 className="text-lg font-semibold mb-3">Your Videos</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {sampleVideos.slice(0, 4).map((video) => (
+              <div key={video.id} className="relative aspect-[9/16] bg-white/5 rounded-lg overflow-hidden">
+                <video
+                  className="w-full h-full object-cover"
+                  src={video.videoUrl}
+                  muted
+                  playsInline
+                  poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='320'%3E%3Crect width='100%25' height='100%25' fill='%23374151'/%3E%3C/svg%3E"
+                />
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute bottom-2 left-2 right-2">
+                  <div className="text-white text-xs font-medium truncate">
+                    {video.title}
+                  </div>
+                  <div className="text-white/60 text-xs">
+                    {video.difficulty} • {video.duration}
+                  </div>
                 </div>
               </div>
             ))}

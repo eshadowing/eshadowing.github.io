@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Mic, Square, Volume2 } from 'lucide-react';
+import { Mic, Square, Volume2, Heart, MessageCircle, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface VideoCardProps {
@@ -21,6 +21,9 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(42);
+  const [commentsCount, setCommentsCount] = useState(8);
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
@@ -46,6 +49,11 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       }
       setIsPlaying(!isPlaying);
     }
+  };
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+    setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
   };
 
   const startRecording = async () => {
@@ -92,11 +100,12 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       {/* Video Background */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover cursor-pointer"
         src={video.videoUrl}
         loop
         muted
         playsInline
+        onClick={togglePlay}
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
       />
       
@@ -128,21 +137,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
 
           {/* Controls */}
           <div className="flex items-center justify-between gap-3">
-            {/* Video Controls */}
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={togglePlay}
-                size="lg"
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full p-3"
-              >
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-              </Button>
-              <div className="text-xs opacity-75">
-                {Math.floor(currentTime)}s
-              </div>
-            </div>
-
-            {/* Recording Controls */}
+            {/* Left side - Recording Controls */}
             <div className="flex items-center gap-2">
               {hasRecorded && (
                 <Button
@@ -166,6 +161,33 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
                 }`}
               >
                 {isRecording ? <Square className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </Button>
+            </div>
+
+            {/* Right side - Social Actions */}
+            <div className="flex flex-col items-center gap-4">
+              <Button
+                onClick={handleLike}
+                size="sm"
+                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full p-3 flex flex-col items-center gap-1"
+              >
+                <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+                <span className="text-xs font-medium">{likesCount}</span>
+              </Button>
+              
+              <Button
+                size="sm"
+                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full p-3 flex flex-col items-center gap-1"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span className="text-xs font-medium">{commentsCount}</span>
+              </Button>
+              
+              <Button
+                size="sm"
+                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 rounded-full p-3"
+              >
+                <Share className="w-5 h-5" />
               </Button>
             </div>
           </div>

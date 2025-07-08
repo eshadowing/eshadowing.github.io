@@ -1,12 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from 'react';
+import SwipeContainer from '@/components/SwipeContainer';
+import VideoCard from '@/components/VideoCard';
+import Header from '@/components/Header';
+import { sampleVideos } from '@/data/sampleVideos';
 
 const Index = () => {
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+
+  const handleSwipe = (direction: 'up' | 'down', newIndex: number) => {
+    setActiveVideoIndex(newIndex);
+    console.log(`Swiped ${direction} to video ${newIndex + 1}`);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-black flex justify-center">
+      {/* Mobile Container */}
+      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden">
+        <Header />
+        
+        <SwipeContainer onSwipe={handleSwipe}>
+          {sampleVideos.map((video, index) => (
+            <VideoCard
+              key={video.id}
+              video={video}
+              isActive={index === activeVideoIndex}
+            />
+          ))}
+        </SwipeContainer>
       </div>
+      
+      {/* Desktop Side Padding */}
+      <div className="hidden lg:block flex-1 bg-gradient-to-r from-slate-900 to-slate-800" />
     </div>
   );
 };

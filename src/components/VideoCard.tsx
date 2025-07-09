@@ -103,7 +103,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
       
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-between p-6 text-white">
+      <div className="relative h-full flex flex-col p-6 text-white">
         {/* Top Section */}
         <div className="flex justify-between items-start -mt-2">
           <div className="flex items-center gap-2">
@@ -113,8 +113,8 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="space-y-4 pb-safe pb-60">
+        {/* Push content to bottom with margin-top auto */}
+        <div className="mt-auto space-y-4">
           {/* Current Subtitle - Clickable */}
           <div 
             className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors"
@@ -136,7 +136,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           </div>
           
           {/* Video Progress Bar */}
-          <div className="mt-4 mb-24">
+          <div className="mt-4 mb-4">
             <div 
               className="relative h-1 bg-white/20 rounded-full cursor-pointer"
               onClick={(e) => {

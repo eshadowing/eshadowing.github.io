@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import SwipeContainer from '@/components/SwipeContainer';
 import VideoCard from '@/components/VideoCard';
@@ -24,18 +23,21 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-black flex justify-center">
       {/* Mobile Container */}
-      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden pb-16">
+      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden">
         <Header />
         
-        <SwipeContainer onSwipe={handleSwipe}>
-          {sampleVideos.map((video, index) => (
-            <VideoCard
-              key={video.id}
-              video={video}
-              isActive={index === activeVideoIndex}
-            />
-          ))}
-        </SwipeContainer>
+        {/* Video Container with bottom spacing only */}
+        <div className="absolute top-0 left-0 right-0 bottom-0 pb-20">
+          <SwipeContainer onSwipe={handleSwipe}>
+            {sampleVideos.map((video, index) => (
+              <VideoCard
+                key={video.id}
+                video={video}
+                isActive={index === activeVideoIndex}
+              />
+            ))}
+          </SwipeContainer>
+        </div>
         
         <BottomNav 
           showMicButton={true}

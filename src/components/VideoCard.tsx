@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Volume2, Heart, MessageCircle, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -86,23 +85,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
             <div className="bg-blue-600/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
               {video.difficulty}
             </div>
-            <Button
-              onClick={() => {
-                if (videoRef.current) {
-                  const speeds = [1, 1.25, 1.5, 1.75, 2];
-                  const currentIndex = speeds.indexOf(playbackSpeed);
-                  const nextIndex = (currentIndex + 1) % speeds.length;
-                  const newSpeed = speeds[nextIndex];
-                  videoRef.current.playbackRate = newSpeed;
-                  setPlaybackSpeed(newSpeed);
-                  console.log(`Speed changed to ${newSpeed}x`);
-                }
-              }}
-              size="sm"
-              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 px-2 py-1 text-xs"
-            >
-              {playbackSpeed}x
-            </Button>
           </div>
         </div>
 

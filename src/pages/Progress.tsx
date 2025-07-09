@@ -6,7 +6,7 @@ import BottomNav from '@/components/BottomNav';
 const ProgressPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white flex justify-center">
-      <div className="relative w-full max-w-sm mx-auto h-screen bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto pb-24">
+      <div className="relative w-full max-w-sm mx-auto h-screen bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto pb-32 pb-safe">
         {/* Header */}
         <div className="p-6 text-center border-b border-slate-700/50">
           <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">

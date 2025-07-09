@@ -196,7 +196,7 @@ const Chat = () => {
         <div className="flex-1 overflow-y-auto min-h-0">
           {(!selectedTopic || (selectedTopic && isSearchFocused)) ? (
             /* Popular Topics - Only show when no topic selected */
-            <div className="p-4 space-y-3 pb-24">
+            <div className="p-4 space-y-3 pb-32 pb-safe">
               <h2 className="text-sm font-medium text-gray-300">Popular Topics</h2>
               <div className="grid gap-3">
                 {predefinedTopics.map((topic) => (
@@ -218,7 +218,7 @@ const Chat = () => {
             </div>
           ) : (
             /* Messages - Show when topic is selected */
-            <div className="p-4 space-y-4 pb-24">
+            <div className="p-4 space-y-4 pb-32 pb-safe">
               {messages.map((message) => (
                 <div
                   key={message.id}

@@ -7,7 +7,7 @@ import BottomNav from '@/components/BottomNav';
 const Profile = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex justify-center">
-      <div className="relative w-full max-w-sm mx-auto min-h-screen bg-gray-900 pb-24 pb-safe overflow-y-auto">
+      <div className="relative w-full max-w-sm mx-auto min-h-screen bg-gray-900 pb-32 pb-safe overflow-y-auto">
         {/* Header */}
         <div className="p-6 text-center border-b border-gray-700">
           <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg">

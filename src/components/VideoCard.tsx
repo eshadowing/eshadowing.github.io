@@ -168,18 +168,18 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       
       {/* Sentence Popup */}
       {showSentencePopup && (
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-end z-20">
-          <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-12 max-h-2/3 overflow-hidden">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end z-[60]">
+          <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-safe mb-20 max-h-2/3 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">All Sentences</h3>
               <button 
                 onClick={() => setShowSentencePopup(false)}
-                className="text-white/70 hover:text-white"
+                className="text-white/70 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10"
               >
                 ✕
               </button>
             </div>
-            <div className="space-y-3 overflow-y-auto max-h-96">
+            <div className="space-y-3 overflow-y-auto max-h-80 pb-4">
               {video.sentences?.map((sentence, index) => (
                 <button
                   key={index}
@@ -192,7 +192,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
                 >
                   <div className="flex items-start gap-3">
                     <span className="text-xs opacity-70 mt-1 min-w-8">
-                      {Math.floor(sentence.timestamp / 60)}:{String(sentence.timestamp % 60).padStart(2, '0')}
+                      {Math.floor(sentence.timestamp / 60)}:{String(Math.floor(sentence.timestamp % 60)).padStart(2, '0')}
                     </span>
                     <span className="text-sm leading-relaxed">{sentence.text}</span>
                   </div>

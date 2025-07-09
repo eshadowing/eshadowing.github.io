@@ -140,19 +140,7 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
         ))}
       </div>
       
-      {/* Progress Indicator - moved to left */}
-      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-30 pointer-events-none">
-        {children.map((_, index) => (
-          <div
-            key={index}
-            className={`w-1 h-8 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? 'bg-white shadow-lg' 
-                : 'bg-white/30'
-            }`}
-          />
-        ))}
-      </div>
+      {/* Progress Indicator - removed */}
     </div>
   );
 };

@@ -145,10 +145,10 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white pb-16 overflow-hidden">
-      <div className="relative w-full max-w-sm mx-auto min-h-screen flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white fixed inset-0 flex justify-center">
+      <div className="relative w-full max-w-sm mx-auto h-full flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/20 backdrop-blur-sm">
+        <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/20 backdrop-blur-sm flex-shrink-0">
           <Button
             variant="ghost"
             size="sm"
@@ -170,7 +170,7 @@ const Chat = () => {
         </div>
 
         {/* Search Bar - Always visible */}
-        <div className="p-4 border-b border-white/10 bg-black/10">
+        <div className="p-4 border-b border-white/10 bg-black/10 flex-shrink-0">
           <div className="flex gap-2">
             <Input
               value={customTopic}
@@ -193,10 +193,10 @@ const Chat = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 pb-24 overflow-hidden">
+        <div className="flex-1 overflow-y-auto min-h-0">
           {(!selectedTopic || (selectedTopic && isSearchFocused)) ? (
             /* Popular Topics - Only show when no topic selected */
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-3 pb-24">
               <h2 className="text-sm font-medium text-gray-300">Popular Topics</h2>
               <div className="grid gap-3">
                 {predefinedTopics.map((topic) => (
@@ -218,7 +218,7 @@ const Chat = () => {
             </div>
           ) : (
             /* Messages - Show when topic is selected */
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 pb-24">
               {messages.map((message) => (
                 <div
                   key={message.id}

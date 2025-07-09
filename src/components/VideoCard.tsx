@@ -114,7 +114,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
 
         {/* Push content to bottom with margin-top auto */}
-        <div className="mt-auto space-y-4">
+        <div className="mt-auto space-y-4 mb-24 pb-safe">
           {/* Current Subtitle - Clickable */}
           <div 
             className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors"

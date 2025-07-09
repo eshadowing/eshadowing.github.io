@@ -28,7 +28,7 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
     }];
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging) return;
     
     const currentTouchY = e.touches[0].clientY;
@@ -50,6 +50,11 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
     if (Math.abs(currentTouchY - startY) > 10) {
       e.preventDefault();
     }
+  };
+
+  const handleReactTouchMove = (e: React.TouchEvent) => {
+    // This is just for React, the actual handling is done by the native event listener
+    // We keep this to maintain React's event handling chain
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -118,12 +123,20 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
     }
   }, [currentIndex, children.length, isMobile]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container && isMobile) {
+      container.addEventListener('touchmove', handleTouchMove, { passive: false });
+      return () => container.removeEventListener('touchmove', handleTouchMove);
+    }
+  }, [isDragging, startY, isMobile]);
+
   return (
     <div 
       ref={containerRef}
       className="relative w-full h-full overflow-hidden touch-none"
       onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
+      onTouchMove={handleReactTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <div 

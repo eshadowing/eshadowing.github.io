@@ -1,13 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SwipeContainer from '@/components/SwipeContainer';
 import VideoCard from '@/components/VideoCard';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { sampleVideos } from '@/data/sampleVideos';
+import { videoPreloader } from '@/utils/videoPreloader';
 
 const Index = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [isPreloading, setIsPreloading] = useState(false);
+
+  // Advanced video preloading
+  useEffect(() => {
+    setIsPreloading(true);
+    // Preload adjacent videos for smoother transitions
+    videoPreloader.preloadAdjacentVideos(sampleVideos, activeVideoIndex)
+      .then(() => {
+        console.log('Adjacent videos preloaded successfully');
+        setIsPreloading(false);
+      })
+      .catch((error) => {
+        console.error('Error preloading videos:', error);
+        setIsPreloading(false);
+      });
+  }, [activeVideoIndex]);
+
+  // Cleanup preloader on unmount
+  useEffect(() => {
+    return () => {
+      videoPreloader.cleanup();
+    };
+  }, []);
 
   const handleSwipe = (direction: 'up' | 'down', newIndex: number) => {
     setActiveVideoIndex(newIndex);
@@ -24,7 +48,7 @@ const Index = () => {
     <div className="min-h-screen bg-black flex justify-center">
       {/* Mobile Container */}
       <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden">
-        <Header />
+        <Header isPreloading={isPreloading} />
         
         {/* Video Container with bottom spacing only */}
         <div className="absolute top-0 left-0 right-0 bottom-0 pb-20">

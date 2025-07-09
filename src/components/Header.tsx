@@ -1,15 +1,30 @@
-import { Settings, Captions, Volume2, VolumeX } from 'lucide-react';
+import { Settings, Captions, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
-const Header = () => {
+interface HeaderProps {
+  isPreloading?: boolean;
+}
+
+const Header = ({ isPreloading = false }: HeaderProps) => {
   const [isSubtitlesOn, setIsSubtitlesOn] = useState(false);
   const [isVolumeOn, setIsVolumeOn] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState('1x');
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 p-4 pointer-events-none">
-      <div className="flex justify-end items-center">
+      <div className="flex justify-between items-center">
+        {/* Preloading Indicator */}
+        <div className="flex items-center gap-2">
+          {isPreloading && (
+            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1.5 pointer-events-auto">
+              <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />
+              <span className="text-xs text-white/80">Preloading...</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Right Controls */}
         <div className="flex items-center gap-2 pointer-events-auto">
           <Button 
             size="sm"

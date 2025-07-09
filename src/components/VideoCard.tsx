@@ -114,7 +114,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="space-y-4 pb-safe">
+        <div className="space-y-4 pb-safe pb-60">
           {/* Current Subtitle - Clickable */}
           <div 
             className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors"

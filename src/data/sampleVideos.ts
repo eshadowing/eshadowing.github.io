@@ -6,9 +6,21 @@ export const sampleVideos = [
     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     transcript: "Hi, I'd like a medium coffee with milk, please. How much is that? Thank you very much!",
     sentences: [
-      { text: "Hi, I'd like a medium coffee with milk, please.", timestamp: 0 },
-      { text: "How much is that?", timestamp: 3 },
-      { text: "Thank you very much!", timestamp: 6 }
+      { 
+        text: "Hi, I'd like a medium coffee with milk, please.", 
+        timestamp: 0,
+        translation: "안녕하세요, 우유가 들어간 미디엄 커피 하나 주세요."
+      },
+      { 
+        text: "How much is that?", 
+        timestamp: 3,
+        translation: "얼마인가요?"
+      },
+      { 
+        text: "Thank you very much!", 
+        timestamp: 6,
+        translation: "정말 감사합니다!"
+      }
     ],
     difficulty: "Beginner",
     duration: "0:15"
@@ -20,9 +32,21 @@ export const sampleVideos = [
     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     transcript: "Good morning everyone. Let me introduce myself. I'm Sarah Johnson from the marketing department.",
     sentences: [
-      { text: "Good morning everyone.", timestamp: 0 },
-      { text: "Let me introduce myself.", timestamp: 2 },
-      { text: "I'm Sarah Johnson from the marketing department.", timestamp: 5 }
+      { 
+        text: "Good morning everyone.", 
+        timestamp: 0,
+        translation: "안녕하세요 여러분."
+      },
+      { 
+        text: "Let me introduce myself.", 
+        timestamp: 2,
+        translation: "자기소개를 하겠습니다."
+      },
+      { 
+        text: "I'm Sarah Johnson from the marketing department.", 
+        timestamp: 5,
+        translation: "저는 마케팅 부서의 사라 존슨입니다."
+      }
     ],
     difficulty: "Intermediate",
     duration: "0:20"
@@ -34,8 +58,16 @@ export const sampleVideos = [
     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     transcript: "Excuse me, could you tell me how to get to the train station? Is it walking distance from here?",
     sentences: [
-      { text: "Excuse me, could you tell me how to get to the train station?", timestamp: 0 },
-      { text: "Is it walking distance from here?", timestamp: 4 }
+      { 
+        text: "Excuse me, could you tell me how to get to the train station?", 
+        timestamp: 0,
+        translation: "실례합니다, 기차역까지 어떻게 가는지 알려주실 수 있나요?"
+      },
+      { 
+        text: "Is it walking distance from here?", 
+        timestamp: 4,
+        translation: "여기서 걸어갈 수 있는 거리인가요?"
+      }
     ],
     difficulty: "Beginner",
     duration: "0:18"
@@ -47,8 +79,16 @@ export const sampleVideos = [
     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     transcript: "Today I'm going to present our research findings on sustainable energy solutions for urban environments.",
     sentences: [
-      { text: "Today I'm going to present our research findings", timestamp: 0 },
-      { text: "on sustainable energy solutions for urban environments.", timestamp: 4 }
+      { 
+        text: "Today I'm going to present our research findings", 
+        timestamp: 0,
+        translation: "오늘은 저희 연구 결과를 발표하겠습니다"
+      },
+      { 
+        text: "on sustainable energy solutions for urban environments.", 
+        timestamp: 4,
+        translation: "도시 환경을 위한 지속 가능한 에너지 솔루션에 대해서요."
+      }
     ],
     difficulty: "Advanced",
     duration: "0:25"
@@ -60,8 +100,16 @@ export const sampleVideos = [
     videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     transcript: "What are you doing this weekend? I was thinking of going hiking if the weather's nice.",
     sentences: [
-      { text: "What are you doing this weekend?", timestamp: 0 },
-      { text: "I was thinking of going hiking if the weather's nice.", timestamp: 3 }
+      { 
+        text: "What are you doing this weekend?", 
+        timestamp: 0,
+        translation: "이번 주말에 뭐 하세요?"
+      },
+      { 
+        text: "I was thinking of going hiking if the weather's nice.", 
+        timestamp: 3,
+        translation: "날씨가 좋으면 하이킹을 가려고 생각하고 있어요."
+      }
     ],
     difficulty: "Intermediate",
     duration: "0:16"

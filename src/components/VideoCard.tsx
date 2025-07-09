@@ -9,7 +9,7 @@ interface VideoCardProps {
     description: string;
     videoUrl: string;
     transcript: string;
-    sentences: Array<{ text: string; timestamp: number }>;
+    sentences: Array<{ text: string; timestamp: number; translation?: string }>;
     difficulty: string;
     duration: string;
   };
@@ -114,20 +114,29 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
 
         {/* Bottom Section */}
-        <div className="space-y-4">
+        <div className="space-y-4 pb-safe">
           {/* Current Subtitle - Clickable */}
           <div 
             className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors"
             onClick={() => setShowSentencePopup(true)}
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm leading-relaxed font-medium flex-1">{currentSentence}</p>
+              <div className="flex-1">
+                {/* Translation (above subtitle) */}
+                {video.sentences?.[currentSentenceIndex]?.translation && (
+                  <p className="text-sm leading-relaxed text-blue-200 mb-2 opacity-90">
+                    {video.sentences[currentSentenceIndex].translation}
+                  </p>
+                )}
+                {/* Original subtitle */}
+                <p className="text-sm leading-relaxed font-medium text-white">{currentSentence}</p>
+              </div>
               <ChevronUp className="w-4 h-4 ml-2 opacity-70" />
             </div>
           </div>
           
           {/* Video Progress Bar */}
-          <div className="mt-4 mb-12">
+          <div className="mt-4 mb-24">
             <div 
               className="relative h-1 bg-white/20 rounded-full cursor-pointer"
               onClick={(e) => {

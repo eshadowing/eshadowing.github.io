@@ -1,6 +1,6 @@
 import { Home, User, BarChart3, MessageCircle, Mic, MicOff } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/TrackedButton';
 
 interface BottomNavProps {
   showMicButton?: boolean;
@@ -35,6 +35,11 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
             <Button
               onClick={onMicClick}
               size="lg"
+              trackingName="mic_button"
+              trackingData={{
+                mic_state: isListening ? 'stop_recording' : 'start_recording',
+                page: 'home'
+              }}
               className={`relative w-16 h-16 rounded-full shadow-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
                 isListening 
                   ? 'bg-gradient-to-r from-red-500 to-red-600 border-red-400/50 animate-pulse shadow-red-500/25' 

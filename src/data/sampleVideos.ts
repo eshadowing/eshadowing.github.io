@@ -8,14 +8,114 @@ export const sampleVideos = [
     transcript: "Natural conversation from The Big Bang Theory showing everyday English usage",
     sentences: [
       { 
-        text: "This is a sample sentence from the video.", 
-        timestamp: 0,
-        translation: "이것은 영상의 샘플 문장입니다."
+        text: "So, with this level of high-power laser array, we would actually be able to solve the black hole information paradox once and for all.", 
+        timestamp: 0.32,
+        translation: "그래서, 이 수준의 고출력 레이저 배열로 우리는 실제로 블랙홀 정보 역설을 완전히 해결할 수 있을 것입니다."
       },
       { 
-        text: "You can update these with actual dialogue.", 
-        timestamp: 5,
-        translation: "실제 대화로 이것들을 업데이트할 수 있습니다."
+        text: "That's impressive.", 
+        timestamp: 7.64,
+        translation: "인상적이네요."
+      },
+      { 
+        text: "And how much funding were you looking for?", 
+        timestamp: 8.56,
+        translation: "그리고 얼마나 많은 자금을 찾고 있었나요?"
+      },
+      { 
+        text: "$20 million.", 
+        timestamp: 10.64,
+        translation: "2천만 달러입니다."
+      },
+      { 
+        text: "Really?", 
+        timestamp: 11.28,
+        translation: "정말로?"
+      },
+      { 
+        text: "You think you can build that for $20 million?", 
+        timestamp: 12.4,
+        translation: "2천만 달러로 그것을 만들 수 있다고 생각하나요?"
+      },
+      { 
+        text: "Not a chance.", 
+        timestamp: 15.04,
+        translation: "가능성이 없습니다."
+      },
+      { 
+        text: "I'm sorry, then why are you asking me for it?", 
+        timestamp: 17.72,
+        translation: "죄송하지만, 그럼 왜 저에게 그것을 요청하는 건가요?"
+      },
+      { 
+        text: "Because once you've spent $20 million, you're much more likely to give me an additional $50.", 
+        timestamp: 20.24,
+        translation: "왜냐하면 일단 2천만 달러를 쓰고 나면, 추가로 5천만 달러를 줄 가능성이 훨씬 높아지기 때문입니다."
+      },
+      { 
+        text: "So actually what you're saying is with $70 million, you can build this.", 
+        timestamp: 25.08,
+        translation: "그러니까 실제로는 7천만 달러로 이것을 만들 수 있다는 뜻이군요."
+      },
+      { 
+        text: "I can see why you'd think that, but no.", 
+        timestamp: 29.28,
+        translation: "왜 그렇게 생각하시는지 알겠지만, 아니요."
+      },
+      { 
+        text: "You can't go to the Board of Trustees and say you gave Sheldon Cooper $70 million and have nothing to show for it.", 
+        timestamp: 32.96,
+        translation: "이사회에 가서 셸던 쿠퍼에게 7천만 달러를 주고 아무것도 보여줄 게 없다고 말할 수는 없잖아요."
+      },
+      { 
+        text: "Now, the only way you'd be able to save face is to double down.", 
+        timestamp: 38.32,
+        translation: "이제 체면을 세울 수 있는 유일한 방법은 배수를 늘리는 것입니다."
+      },
+      { 
+        text: "So $140.", 
+        timestamp: 42.0,
+        translation: "그러니까 1억 4천만 달러."
+      },
+      { 
+        text: "And then double again.", 
+        timestamp: 42.96,
+        translation: "그리고 다시 두 배로."
+      },
+      { 
+        text: "$280?", 
+        timestamp: 45.52,
+        translation: "2억 8천만 달러?"
+      },
+      { 
+        text: "And then, good news, not quite, double again.", 
+        timestamp: 45.68,
+        translation: "그리고 좋은 소식은, 아니 정확히는 아니지만, 다시 두 배로."
+      },
+      { 
+        text: "So what do you say?", 
+        timestamp: 49.12,
+        translation: "그래서 어떻게 생각하세요?"
+      },
+      { 
+        text: "We have a deal?", 
+        timestamp: 50.64,
+        translation: "거래가 성사된 건가요?"
+      },
+      { 
+        text: "You said no?", 
+        timestamp: 51.2,
+        translation: "거절하셨다고요?"
+      },
+      { 
+        text: "No, that's only a two-letter word.", 
+        timestamp: 55.04,
+        translation: "아니요, 그건 단지 두 글자짜리 단어일 뿐이에요."
+      },
+      { 
+        text: "You're going to have to double down.", 
+        timestamp: 56.84,
+        translation: "당신은 배수를 늘려야 할 것입니다."
       }
     ],
     difficulty: "Intermediate",

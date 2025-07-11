@@ -60,7 +60,7 @@ const Profile = () => {
         </div>
 
         {/* Your Videos */}
-        <div className="p-4 pb-20">
+        <div className="p-4 pb-80">
           <h3 className="text-lg font-semibold mb-3 text-white">Your Videos</h3>
           <div className="grid grid-cols-2 gap-3">
             {sampleVideos.slice(0, 4).map((video) => (

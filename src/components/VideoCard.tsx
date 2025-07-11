@@ -52,6 +52,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const [isMuted, setIsMuted] = useState(false); // Initialize as unmuted
   const playerRef = useRef<any>(null);
   const [playerReady, setPlayerReady] = useState(false);
+  const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const isYouTubeVideo = video.isYoutube && video.videoUrl.includes('youtube.com');
   const youtubeVideoId = isYouTubeVideo ? getYouTubeVideoId(video.videoUrl) : null;
@@ -68,6 +69,12 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     }
   }, [isActive, isYouTubeVideo]);
 
+  // Reset subtitle tracking when video changes
+  useEffect(() => {
+    setCurrentTime(0);
+    setCurrentSentenceIndex(0);
+  }, [video.id]);
+
   // Update current sentence based on video time
   useEffect(() => {
     if (video.sentences && video.sentences.length > 0) {
@@ -80,6 +87,30 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       }
     }
   }, [currentTime, video.sentences, currentSentenceIndex]);
+
+  // Start time tracking for YouTube videos
+  useEffect(() => {
+    if (isYouTubeVideo && playerRef.current && playerReady && isPlaying && isActive) {
+      timeUpdateIntervalRef.current = setInterval(() => {
+        if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+          const time = playerRef.current.getCurrentTime();
+          setCurrentTime(time);
+        }
+      }, 100); // Update every 100ms for smooth subtitle sync
+    } else {
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current);
+        timeUpdateIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current);
+        timeUpdateIntervalRef.current = null;
+      }
+    };
+  }, [isYouTubeVideo, playerReady, isPlaying, isActive]);
 
   // Reset speed when video changes (only for regular videos)
   useEffect(() => {
@@ -107,6 +138,10 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     return () => {
       if (playerRef.current && typeof playerRef.current.destroy === 'function') {
         playerRef.current.destroy();
+      }
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current);
+        timeUpdateIntervalRef.current = null;
       }
     };
   }, [isYouTubeVideo, isActive, youtubeVideoId]);
@@ -182,7 +217,10 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   };
 
   const jumpToSentence = (timestamp: number) => {
-    if (!isYouTubeVideo && videoRef.current) {
+    if (isYouTubeVideo && playerRef.current && playerReady) {
+      playerRef.current.seekTo(timestamp, true);
+      setCurrentTime(timestamp);
+    } else if (!isYouTubeVideo && videoRef.current) {
       videoRef.current.currentTime = timestamp;
       setCurrentTime(timestamp);
     }
@@ -245,10 +283,10 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       )}
       
       {/* Overlay Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
       
       {/* Content */}
-      <div className="relative h-full flex flex-col p-6 text-white">
+      <div className="relative h-full flex flex-col p-6 text-white z-20 pointer-events-none">
         {/* Top Section - Removed badges from here */}
         <div className="flex justify-between items-start -mt-2">
           <div className="flex items-center gap-2">
@@ -257,7 +295,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
 
         {/* Push content to bottom with margin-top auto */}
-        <div className="mt-auto space-y-4 mb-24 pb-safe">
+        <div className="mt-auto space-y-4 mb-24 pb-safe pointer-events-auto">
           {/* Difficulty Badge - Moved above subtitles with liquid glass style */}
           <div className="flex justify-start mb-2">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 shadow-lg px-3 py-1 rounded-full text-sm font-medium text-white/90">
@@ -267,8 +305,11 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           
           {/* Current Subtitle - Clickable */}
           <div 
-            className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors"
-            onClick={() => setShowSentencePopup(true)}
+            className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors relative z-30"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowSentencePopup(true);
+            }}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -321,7 +362,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       {/* Sentence Popup */}
       {showSentencePopup && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end z-[60]">
-          <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-safe mb-20 max-h-2/3 overflow-hidden">
+          <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-safe mb-0 max-h-2/3 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">All Sentences</h3>
               <button 
@@ -331,7 +372,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
                 ✕
               </button>
             </div>
-            <div className="space-y-3 overflow-y-auto max-h-80 pb-4">
+            <div className="space-y-3 overflow-y-auto max-h-80 pb-60">
               {video.sentences?.map((sentence, index) => (
                 <button
                   key={index}
@@ -362,7 +403,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       )}
       
       {/* Social Actions - positioned at right center */}
-      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-10">
+      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-20 pointer-events-auto">
         <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors"
              onClick={handleLike}>
           <div className="flex flex-col items-center justify-center gap-0">

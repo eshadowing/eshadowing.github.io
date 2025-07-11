@@ -3,6 +3,7 @@ import { ArrowLeft, Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
+import { trackUserBehavior } from '@/utils/tracking';
 import BottomNav from '@/components/BottomNav';
 
 // Extend Window interface for speech recognition
@@ -129,6 +130,9 @@ const Chat = () => {
   };
 
   const handleVoiceInput = () => {
+    // Track mic button press
+    trackUserBehavior('press_mic');
+    
     if (isListening) {
       recognitionRef.current?.stop();
       setIsListening(false);

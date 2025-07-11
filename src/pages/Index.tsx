@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { sampleVideos } from '@/data/sampleVideos';
 import { videoPreloader } from '@/utils/videoPreloader';
+import { trackUserBehavior } from '@/utils/tracking';
 
 const Index = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
@@ -39,15 +40,18 @@ const Index = () => {
   };
 
   const handleMicClick = () => {
+    // Track mic button press
+    trackUserBehavior('press_mic');
+    
     setIsRecording(!isRecording);
     // Add your recording logic here
     console.log(`Recording ${!isRecording ? 'started' : 'stopped'}`);
   };
 
   return (
-    <div className="min-h-screen bg-black flex justify-center">
-      {/* Mobile Container */}
-      <div className="relative w-full max-w-sm mx-auto h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black flex justify-center items-center lg:items-stretch">
+      {/* Responsive Container */}
+      <div className="relative w-full max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl mx-auto h-screen bg-black overflow-hidden lg:shadow-2xl lg:rounded-lg">
         <Header isPreloading={isPreloading} />
         
         {/* Video Container with bottom spacing only */}
@@ -69,9 +73,6 @@ const Index = () => {
           onMicClick={handleMicClick}
         />
       </div>
-      
-      {/* Desktop Side Padding */}
-      <div className="hidden lg:block flex-1 bg-gradient-to-r from-slate-900 to-slate-800" />
     </div>
   );
 };

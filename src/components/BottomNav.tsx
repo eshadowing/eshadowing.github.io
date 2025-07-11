@@ -36,13 +36,6 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
       {showMicButton && (
         <div className="absolute left-1/2 transform -translate-x-1/2 -top-1 z-50 pointer-events-auto">
           <div className="relative pointer-events-auto">
-            {/* Glow effect */}
-            <div className={`absolute inset-0 rounded-full blur-lg transition-all duration-300 ${
-              isListening 
-                ? 'bg-red-500/30 scale-110' 
-                : 'bg-blue-500/20 scale-100'
-            }`} />
-            
             {/* Main button */}
             <Button
               onClick={onMicClick}
@@ -52,23 +45,10 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
                 mic_state: isListening ? 'stop_recording' : 'start_recording',
                 page: 'home'
               }}
-              className={`relative w-16 h-16 rounded-full shadow-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
-                isListening 
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 border-red-400/50 animate-pulse shadow-red-500/25' 
-                  : 'bg-gradient-to-r from-blue-500 to-blue-600 border-blue-400/50 hover:from-blue-600 hover:to-blue-700 shadow-blue-500/25'
-              }`}
+              className="relative w-16 h-16 rounded-full shadow-2xl border-2 transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-blue-500 to-blue-600 border-blue-400/50 hover:from-blue-600 hover:to-blue-700 shadow-blue-500/25"
             >
-              {isListening ? (
-                <MicOff className="w-7 h-7 text-white drop-shadow-sm" />
-              ) : (
-                <Mic className="w-7 h-7 text-white drop-shadow-sm" />
-              )}
+              <Mic className="w-7 h-7 text-white drop-shadow-sm" />
             </Button>
-            
-            {/* Listening indicator ripple */}
-            {isListening && (
-              <div className="absolute inset-0 rounded-full border-2 border-red-400/60 animate-ping" />
-            )}
           </div>
         </div>
       )}

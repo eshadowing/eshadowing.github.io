@@ -80,7 +80,7 @@ const ProgressPage = () => {
         </div>
 
         {/* Achievements */}
-        <div className="p-4">
+        <div className="p-4 pb-60">
           <h3 className="text-lg font-semibold mb-3 text-white">Recent Achievements</h3>
           <div className="space-y-3">
             {[

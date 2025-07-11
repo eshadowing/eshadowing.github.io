@@ -1,29 +1,25 @@
 export const sampleVideos = [
   {
     id: 1,
-    title: "Daily Conversation: At the Coffee Shop",
-    description: "Practice ordering coffee and casual conversation",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    transcript: "Hi, I'd like a medium coffee with milk, please. How much is that? Thank you very much!",
+    title: "The Big Bang Theory - Comedy Scene",
+    description: "Practice with natural English conversation from popular TV show",
+    videoUrl: "https://www.youtube.com/watch?v=15cuAzuELOc",
+    isYoutube: true,
+    transcript: "Natural conversation from The Big Bang Theory showing everyday English usage",
     sentences: [
       { 
-        text: "Hi, I'd like a medium coffee with milk, please.", 
+        text: "This is a sample sentence from the video.", 
         timestamp: 0,
-        translation: "안녕하세요, 우유가 들어간 미디엄 커피 하나 주세요."
+        translation: "이것은 영상의 샘플 문장입니다."
       },
       { 
-        text: "How much is that?", 
-        timestamp: 3,
-        translation: "얼마인가요?"
-      },
-      { 
-        text: "Thank you very much!", 
-        timestamp: 6,
-        translation: "정말 감사합니다!"
+        text: "You can update these with actual dialogue.", 
+        timestamp: 5,
+        translation: "실제 대화로 이것들을 업데이트할 수 있습니다."
       }
     ],
-    difficulty: "Beginner",
-    duration: "0:15"
+    difficulty: "Intermediate",
+    duration: "0:30"
   },
   {
     id: 2,

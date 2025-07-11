@@ -1,4 +1,6 @@
 # Welcome to your Lovable project
+nvm install node         # installs latest Node.js
+nvm use node             # sets it as default
 
 ## Project info
 

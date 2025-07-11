@@ -1,14 +1,23 @@
 interface VideoData {
   id: number;
   videoUrl: string;
+  isYoutube?: boolean;
 }
 
 class VideoPreloader {
   private preloadedVideos = new Map<string, HTMLVideoElement>();
   private maxPreloadedVideos = 5; // Limit to prevent memory issues
 
-  preloadVideo(videoUrl: string): Promise<HTMLVideoElement> {
+  preloadVideo(videoUrl: string, isYoutube?: boolean): Promise<HTMLVideoElement> {
     return new Promise((resolve, reject) => {
+      // Skip preloading for YouTube videos
+      if (isYoutube) {
+        // Create a dummy video element for YouTube videos
+        const dummyVideo = document.createElement('video');
+        resolve(dummyVideo);
+        return;
+      }
+
       // Check if already preloaded
       if (this.preloadedVideos.has(videoUrl)) {
         resolve(this.preloadedVideos.get(videoUrl)!);
@@ -23,7 +32,6 @@ class VideoPreloader {
       const video = document.createElement('video');
       video.src = videoUrl;
       video.preload = 'metadata';
-      video.muted = true;
       video.playsInline = true;
 
       video.addEventListener('loadedmetadata', () => {
@@ -42,17 +50,20 @@ class VideoPreloader {
     
     // Preload previous video
     if (currentIndex > 0) {
-      promises.push(this.preloadVideo(videos[currentIndex - 1].videoUrl));
+      const prevVideo = videos[currentIndex - 1];
+      promises.push(this.preloadVideo(prevVideo.videoUrl, prevVideo.isYoutube));
     }
     
     // Preload next video
     if (currentIndex < videos.length - 1) {
-      promises.push(this.preloadVideo(videos[currentIndex + 1].videoUrl));
+      const nextVideo = videos[currentIndex + 1];
+      promises.push(this.preloadVideo(nextVideo.videoUrl, nextVideo.isYoutube));
     }
 
     // Preload next 2 videos for even smoother experience
     if (currentIndex < videos.length - 2) {
-      promises.push(this.preloadVideo(videos[currentIndex + 2].videoUrl));
+      const nextVideo2 = videos[currentIndex + 2];
+      promises.push(this.preloadVideo(nextVideo2.videoUrl, nextVideo2.isYoutube));
     }
 
     return Promise.allSettled(promises);

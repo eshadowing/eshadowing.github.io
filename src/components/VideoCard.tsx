@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Volume2, Heart, MessageCircle, Share, ChevronUp, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBetaAccess } from '@/hooks/useBetaAccess';
@@ -31,6 +31,11 @@ interface VideoCardProps {
     isYoutube?: boolean;
   };
   isActive: boolean;
+  onSentenceClick?: () => void;
+}
+
+export interface VideoCardRef {
+  seekToTime: (timestamp: number) => void;
 }
 
 // Helper function to extract YouTube video ID from URL
@@ -40,7 +45,7 @@ const getYouTubeVideoId = (url: string): string | null => {
   return (match && match[2].length === 11) ? match[2] : null;
 };
 
-const VideoCard = ({ video, isActive }: VideoCardProps) => {
+const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, onSentenceClick }, ref) => {
   const { trackButtonClick, isPopupOpen } = useBetaAccess();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -48,7 +53,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const [likesCount, setLikesCount] = useState(42);
   const [commentsCount, setCommentsCount] = useState(8);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
-  const [showSentencePopup, setShowSentencePopup] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
@@ -323,7 +327,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       videoRef.current.currentTime = timestamp;
       setCurrentTime(timestamp);
     }
-    setShowSentencePopup(false);
+    // Remove the popup close logic as it's handled by parent
   };
 
   const toggleMute = () => {
@@ -339,6 +343,19 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   };
 
   const currentSentence = video.sentences?.[currentSentenceIndex]?.text || video.transcript;
+
+  // Expose seek method to parent component
+  useImperativeHandle(ref, () => ({
+    seekToTime: (timestamp: number) => {
+      if (isYouTubeVideo && playerRef.current && playerReady) {
+        playerRef.current.seekTo(timestamp, true);
+        setCurrentTime(timestamp);
+      } else if (!isYouTubeVideo && videoRef.current) {
+        videoRef.current.currentTime = timestamp;
+        setCurrentTime(timestamp);
+      }
+    }
+  }));
 
   // Handle pausing video when beta access popup is shown
   useEffect(() => {
@@ -458,7 +475,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
             onClick={(e) => {
               e.stopPropagation();
               trackUserBehavior('click_sentence');
-              setShowSentencePopup(true);
+              onSentenceClick?.();
             }}
           >
             <div className="flex items-center justify-between">
@@ -509,51 +526,6 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
       </div>
       
-      {/* Sentence Popup */}
-      {showSentencePopup && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end z-[60]">
-          <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-safe mb-0 max-h-2/3 overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">All Sentences</h3>
-              <button 
-                onClick={() => setShowSentencePopup(false)}
-                className="text-white/70 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="space-y-3 overflow-y-auto max-h-80 pb-60" data-scrollable="true">
-              {video.sentences?.map((sentence, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    trackUserBehavior('click_sentence');
-                    jumpToSentence(sentence.timestamp);
-                  }}
-                  className={`w-full text-left p-3 rounded-lg transition-colors ${
-                    index === currentSentenceIndex 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-white/10 hover:bg-white/20 text-white/90'
-                  }`}
-                  disabled={isYouTubeVideo} // Disable jumping for YouTube videos
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-xs opacity-70 mt-1 min-w-8">
-                      {Math.floor(sentence.timestamp / 60)}:{String(Math.floor(sentence.timestamp % 60)).padStart(2, '0')}
-                    </span>
-                    <span className="text-sm leading-relaxed">{sentence.text}</span>
-                  </div>
-                  {sentence.translation && (
-                    <p className="text-xs text-blue-200 mt-1 ml-11 opacity-80">
-                      {sentence.translation}
-                    </p>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
       
       {/* Social Actions - positioned at right center */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-20 pointer-events-auto">
@@ -580,6 +552,8 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
       </div>
     </div>
   );
-};
+});
+
+VideoCard.displayName = 'VideoCard';
 
 export default VideoCard;

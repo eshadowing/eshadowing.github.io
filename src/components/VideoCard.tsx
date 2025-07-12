@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Volume2, Heart, MessageCircle, Share, ChevronUp, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useBetaAccess } from '@/hooks/useBetaAccess';
+import { trackUserBehavior } from '@/utils/tracking';
 
 // Add YouTube Player type for TypeScript
 declare global {
@@ -39,6 +41,7 @@ const getYouTubeVideoId = (url: string): string | null => {
 };
 
 const VideoCard = ({ video, isActive }: VideoCardProps) => {
+  const { trackButtonClick } = useBetaAccess();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -60,20 +63,63 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   useEffect(() => {
     if (!isYouTubeVideo && videoRef.current) {
       if (isActive) {
+        // Ensure video src is properly set before playing
+        if (videoRef.current.src !== video.videoUrl) {
+          videoRef.current.src = video.videoUrl;
+          videoRef.current.load(); // Reload the video element
+        }
+        
+        // Reset video to beginning if it's ended or has an error
+        if (videoRef.current.ended || videoRef.current.error) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.load();
+        }
+        
         setIsPlaying(true);
-        videoRef.current.play().catch(console.error);
+        videoRef.current.play().catch((error) => {
+          console.error('Error playing video:', error);
+          // Try to reload and play again if there's an error
+          videoRef.current.load();
+          setTimeout(() => {
+            videoRef.current.play().catch(console.error);
+          }, 100);
+        });
       } else {
         setIsPlaying(false);
         videoRef.current.pause();
       }
     }
-  }, [isActive, isYouTubeVideo]);
+  }, [isActive, isYouTubeVideo, video.videoUrl]);
 
   // Reset subtitle tracking when video changes
   useEffect(() => {
     setCurrentTime(0);
     setCurrentSentenceIndex(0);
   }, [video.id]);
+
+  // Handle reactivation of videos
+  useEffect(() => {
+    if (isActive) {
+      // Reset all state when a video becomes active
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setCurrentSentenceIndex(0);
+      setPlayerReady(false);
+      
+      if (isYouTubeVideo) {
+        // For YouTube videos, we let the initialization effect handle this
+        // But we make sure player state is reset
+        if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+          try {
+            playerRef.current.destroy();
+          } catch (error) {
+            console.warn('Error destroying player on reactivation:', error);
+          }
+          playerRef.current = null;
+        }
+      }
+    }
+  }, [isActive, video.id]);
 
   // Update current sentence based on video time
   useEffect(() => {
@@ -137,7 +183,12 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
 
     return () => {
       if (playerRef.current && typeof playerRef.current.destroy === 'function') {
-        playerRef.current.destroy();
+        try {
+          playerRef.current.destroy();
+        } catch (error) {
+          console.warn('Error destroying YouTube player:', error);
+        }
+        playerRef.current = null;
       }
       if (timeUpdateIntervalRef.current) {
         clearInterval(timeUpdateIntervalRef.current);
@@ -149,10 +200,26 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const initializeYouTubePlayer = () => {
     if (!youtubeVideoId || !isActive) return;
     
+    // Check if the DOM element exists
+    const playerElement = document.getElementById(`youtube-player-${video.id}`);
+    if (!playerElement) {
+      console.warn('YouTube player element not found, retrying...');
+      setTimeout(initializeYouTubePlayer, 100);
+      return;
+    }
+    
     // Clear any existing player
     if (playerRef.current && typeof playerRef.current.destroy === 'function') {
-      playerRef.current.destroy();
+      try {
+        playerRef.current.destroy();
+      } catch (error) {
+        console.warn('Error destroying existing player:', error);
+      }
+      playerRef.current = null;
     }
+    
+    // Reset player ready state
+    setPlayerReady(false);
     
     playerRef.current = new window.YT.Player(`youtube-player-${video.id}`, {
       videoId: youtubeVideoId,
@@ -186,6 +253,15 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           } else if (event.data === window.YT.PlayerState.PAUSED) {
             setIsPlaying(false);
           }
+        },
+        onError: (event) => {
+          console.error('YouTube player error:', event.data);
+          // Try to reinitialize the player after a short delay
+          setTimeout(() => {
+            if (isActive) {
+              initializeYouTubePlayer();
+            }
+          }, 1000);
         }
       }
     });
@@ -245,7 +321,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     <div className="relative w-full h-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl overflow-hidden shadow-2xl">
       {/* Video Background */}
       {isYouTubeVideo && youtubeVideoId ? (
-        <div className="absolute inset-0 w-full h-full">
+        <div key={`youtube-${video.id}-${isActive}`} className="absolute inset-0 w-full h-full">
           <div id={`youtube-player-${video.id}`} className="absolute inset-0 w-full h-full"></div>
           {/* Overlay to capture clicks */}
           <div 
@@ -255,6 +331,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         </div>
       ) : (
         <video
+          key={`video-${video.id}-${isActive}`} // Force recreation when video changes or becomes active
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover cursor-pointer"
           src={video.videoUrl}
@@ -262,6 +339,19 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           playsInline
           onClick={togglePlay}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+          onLoadedMetadata={() => {
+            // Ensure video is ready when metadata loads
+            if (isActive && videoRef.current) {
+              videoRef.current.play().catch(console.error);
+            }
+          }}
+          onError={(e) => {
+            console.error('Video error:', e);
+            // Try to reload the video
+            if (videoRef.current) {
+              videoRef.current.load();
+            }
+          }}
         />
       )}
       
@@ -308,6 +398,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
             className="bg-black/40 backdrop-blur-sm rounded-xl p-4 cursor-pointer hover:bg-black/50 transition-colors relative z-30"
             onClick={(e) => {
               e.stopPropagation();
+              trackUserBehavior('click_sentence');
               setShowSentencePopup(true);
             }}
           >
@@ -372,11 +463,14 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
                 ✕
               </button>
             </div>
-            <div className="space-y-3 overflow-y-auto max-h-80 pb-60">
+            <div className="space-y-3 overflow-y-auto max-h-80 pb-60" data-scrollable="true">
               {video.sentences?.map((sentence, index) => (
                 <button
                   key={index}
-                  onClick={() => jumpToSentence(sentence.timestamp)}
+                  onClick={() => {
+                    trackUserBehavior('click_sentence');
+                    jumpToSentence(sentence.timestamp);
+                  }}
                   className={`w-full text-left p-3 rounded-lg transition-colors ${
                     index === currentSentenceIndex 
                       ? 'bg-blue-600 text-white' 
@@ -412,14 +506,16 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           </div>
         </div>
         
-        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors">
+        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors"
+             onClick={() => trackButtonClick('comment_button', { page: 'home', video_id: video.id.toString() })}>
           <div className="flex flex-col items-center justify-center gap-0">
             <MessageCircle className="w-5 h-5 text-white" />
             <span className="text-xs font-medium leading-none text-white">{commentsCount}</span>
           </div>
         </div>
         
-        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors">
+        <div className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer transition-colors"
+             onClick={() => trackButtonClick('share_button', { page: 'home', video_id: video.id.toString() })}>
           <Share className="w-5 h-5 text-white" />
         </div>
       </div>

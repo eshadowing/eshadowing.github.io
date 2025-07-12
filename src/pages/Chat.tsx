@@ -47,6 +47,9 @@ const Chat = () => {
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
+    // Track user behavior when chat page opens
+    trackUserBehavior('open_chat');
+
     // Initialize speech recognition
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;

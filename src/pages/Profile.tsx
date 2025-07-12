@@ -1,10 +1,28 @@
+import { useEffect } from 'react';
 import { Upload, Heart, Video, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/TrackedButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { sampleVideos } from '@/data/sampleVideos';
+import { trackUserBehavior } from '@/utils/tracking';
 import BottomNav from '@/components/BottomNav';
+import { useBetaAccess } from '@/hooks/useBetaAccess';
 
 const Profile = () => {
+  const { trackButtonClick } = useBetaAccess();
+  
+  useEffect(() => {
+    // Track user behavior when profile page opens
+    trackUserBehavior('open_profile');
+  }, []);
+
+  const handleVideoClick = (videoId: number) => {
+    trackButtonClick('video_click', { 
+      page: 'profile', 
+      video_id: videoId.toString(),
+      action: 'open_video'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex justify-center">
       <div className="relative w-full max-w-sm mx-auto min-h-screen bg-gray-900 pb-32 pb-safe overflow-y-auto">
@@ -49,10 +67,19 @@ const Profile = () => {
               <p className="text-sm text-slate-300 text-center leading-relaxed">
                 Share your shadowing practice and help others learn!
               </p>
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
+              <Button 
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+                trackingName="choose_video_file"
+                trackingData={{ page: 'profile', action: 'upload_video' }}
+              >
                 Choose Video File
               </Button>
-              <Button variant="outline" className="w-full border-slate-500 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:text-white hover:border-slate-400 font-medium transition-all duration-300">
+              <Button 
+                variant="outline" 
+                className="w-full border-slate-500 bg-slate-800/50 text-slate-200 hover:bg-slate-700 hover:text-white hover:border-slate-400 font-medium transition-all duration-300"
+                trackingName="import_youtube_link"
+                trackingData={{ page: 'profile', action: 'import_youtube' }}
+              >
                 Import From Youtube Link
               </Button>
             </CardContent>
@@ -64,7 +91,11 @@ const Profile = () => {
           <h3 className="text-lg font-semibold mb-3 text-white">Your Videos</h3>
           <div className="grid grid-cols-2 gap-3">
             {sampleVideos.slice(0, 4).map((video) => (
-              <div key={video.id} className="relative aspect-[9/16] bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+              <div 
+                key={video.id} 
+                className="relative aspect-[9/16] bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+                onClick={() => handleVideoClick(video.id)}
+              >
                 <video
                   className="w-full h-full object-cover"
                   src={video.videoUrl}

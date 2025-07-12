@@ -22,7 +22,7 @@ interface BetaAccessProviderProps {
 }
 
 export const BetaAccessProvider = ({ children }: BetaAccessProviderProps) => {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(true); // Show popup by default when app loads
 
   const showBetaPopup = () => {
     setShowPopup(true);

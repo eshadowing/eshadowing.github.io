@@ -1,9 +1,16 @@
+import { useEffect } from 'react';
 import { TrendingUp, Award, Clock, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { trackUserBehavior } from '@/utils/tracking';
 import BottomNav from '@/components/BottomNav';
 
 const ProgressPage = () => {
+  useEffect(() => {
+    // Track user behavior when progress page opens
+    trackUserBehavior('open_progress');
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white flex justify-center">
       <div className="relative w-full max-w-sm mx-auto h-screen bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto pb-32 pb-safe">

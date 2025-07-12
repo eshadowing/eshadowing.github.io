@@ -18,6 +18,15 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
   const touchHistoryRef = useRef<{time: number, position: number}[]>([]);
   
   const handleTouchStart = (e: React.TouchEvent) => {
+    // Check if the touch is within a scrollable area (like sentences popup)
+    const target = e.target as HTMLElement;
+    const scrollableElement = target.closest('.overflow-y-auto, [data-scrollable="true"]');
+    
+    // If touch is within a scrollable area, don't handle swipe
+    if (scrollableElement) {
+      return;
+    }
+    
     setStartY(e.touches[0].clientY);
     setIsDragging(true);
     
@@ -30,6 +39,15 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
 
   const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging) return;
+    
+    // Check if the touch is within a scrollable area
+    const target = e.target as HTMLElement;
+    const scrollableElement = target.closest('.overflow-y-auto, [data-scrollable="true"]');
+    
+    // If touch is within a scrollable area, don't handle swipe
+    if (scrollableElement) {
+      return;
+    }
     
     const currentTouchY = e.touches[0].clientY;
     setCurrentY(currentTouchY - startY);
@@ -59,6 +77,18 @@ const SwipeContainer = ({ children, onSwipe }: SwipeContainerProps) => {
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!isDragging) return;
+    
+    // Check if the touch is within a scrollable area
+    const target = e.target as HTMLElement;
+    const scrollableElement = target.closest('.overflow-y-auto, [data-scrollable="true"]');
+    
+    // If touch is within a scrollable area, just reset and don't handle swipe
+    if (scrollableElement) {
+      setCurrentY(0);
+      setIsDragging(false);
+      touchHistoryRef.current = [];
+      return;
+    }
     
     // Calculate velocity from touch history
     const touchHistory = touchHistoryRef.current;

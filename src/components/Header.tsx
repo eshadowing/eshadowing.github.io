@@ -1,5 +1,5 @@
 import { Settings, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/TrackedButton';
 
 interface HeaderProps {
   isPreloading?: boolean;
@@ -24,6 +24,8 @@ const Header = ({ isPreloading = false }: HeaderProps) => {
           <Button 
             size="sm" 
             className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border-0 p-2 rounded-full w-9 h-9"
+            trackingName="settings_button"
+            trackingData={{ page: 'home', action: 'open_settings' }}
           >
             <Settings className="w-4 h-4 text-white" />
           </Button>

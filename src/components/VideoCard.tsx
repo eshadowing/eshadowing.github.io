@@ -41,7 +41,7 @@ const getYouTubeVideoId = (url: string): string | null => {
 };
 
 const VideoCard = ({ video, isActive }: VideoCardProps) => {
-  const { trackButtonClick } = useBetaAccess();
+  const { trackButtonClick, isPopupOpen } = useBetaAccess();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -56,6 +56,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   const playerRef = useRef<any>(null);
   const [playerReady, setPlayerReady] = useState(false);
   const timeUpdateIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [wasPlayingBeforePopup, setWasPlayingBeforePopup] = useState(false);
 
   const isYouTubeVideo = video.isYoutube && video.videoUrl.includes('youtube.com');
   const youtubeVideoId = isYouTubeVideo ? getYouTubeVideoId(video.videoUrl) : null;
@@ -101,14 +102,15 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   useEffect(() => {
     if (isActive) {
       // Reset all state when a video becomes active
-      setIsPlaying(false);
       setCurrentTime(0);
       setCurrentSentenceIndex(0);
-      setPlayerReady(false);
       
       if (isYouTubeVideo) {
-        // For YouTube videos, we let the initialization effect handle this
-        // But we make sure player state is reset
+        // For YouTube videos, reset player state and force re-initialization
+        setPlayerReady(false);
+        setIsPlaying(false);
+        
+        // Destroy existing player to ensure clean re-initialization
         if (playerRef.current && typeof playerRef.current.destroy === 'function') {
           try {
             playerRef.current.destroy();
@@ -117,9 +119,12 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
           }
           playerRef.current = null;
         }
+      } else {
+        // For regular videos, reset playing state
+        setIsPlaying(false);
       }
     }
-  }, [isActive, video.id]);
+  }, [isActive, video.id, isYouTubeVideo]);
 
   // Update current sentence based on video time
   useEffect(() => {
@@ -168,17 +173,22 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   // Initialize YouTube API
   useEffect(() => {
     // Load YouTube API
-    if (isYouTubeVideo && isActive) {
-      if (!window.YT) {
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-        
-        window.onYouTubeIframeAPIReady = initializeYouTubePlayer;
-      } else if (window.YT && window.YT.Player) {
-        initializeYouTubePlayer();
-      }
+    if (isYouTubeVideo && isActive && youtubeVideoId) {
+      // Add a small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (!window.YT) {
+          const tag = document.createElement('script');
+          tag.src = 'https://www.youtube.com/iframe_api';
+          const firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+          
+          window.onYouTubeIframeAPIReady = initializeYouTubePlayer;
+        } else if (window.YT && window.YT.Player) {
+          initializeYouTubePlayer();
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
 
     return () => {
@@ -195,7 +205,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
         timeUpdateIntervalRef.current = null;
       }
     };
-  }, [isYouTubeVideo, isActive, youtubeVideoId]);
+  }, [isYouTubeVideo, isActive, youtubeVideoId, video.id]);
 
   const initializeYouTubePlayer = () => {
     if (!youtubeVideoId || !isActive) return;
@@ -204,7 +214,7 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     const playerElement = document.getElementById(`youtube-player-${video.id}`);
     if (!playerElement) {
       console.warn('YouTube player element not found, retrying...');
-      setTimeout(initializeYouTubePlayer, 100);
+      setTimeout(initializeYouTubePlayer, 200);
       return;
     }
     
@@ -220,51 +230,64 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
     
     // Reset player ready state
     setPlayerReady(false);
+    setIsPlaying(false);
     
-    playerRef.current = new window.YT.Player(`youtube-player-${video.id}`, {
-      videoId: youtubeVideoId,
-      playerVars: {
-        autoplay: 1,
-        controls: 0,
-        showinfo: 0,
-        rel: 0,
-        loop: 1,
-        modestbranding: 1,
-        iv_load_policy: 3,
-        fs: 0,
-        disablekb: 1,
-        mute: 0, // Explicitly set to unmuted (0)
-        enablejsapi: 1,
-        playsinline: 1
-      },
-      events: {
-        onReady: (event) => {
-          playerRef.current = event.target;
-          playerRef.current.unMute(); // Ensure video is unmuted
-          playerRef.current.setVolume(100); // Set volume to maximum
-          playerRef.current.playVideo();
-          setPlayerReady(true);
-          setIsPlaying(true);
-          setIsMuted(false); // Update state to reflect unmuted status
+    // Create new player
+    try {
+      playerRef.current = new window.YT.Player(`youtube-player-${video.id}`, {
+        videoId: youtubeVideoId,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          showinfo: 0,
+          rel: 0,
+          loop: 1,
+          modestbranding: 1,
+          iv_load_policy: 3,
+          fs: 0,
+          disablekb: 1,
+          mute: 0, // Explicitly set to unmuted (0)
+          enablejsapi: 1,
+          playsinline: 1
         },
-        onStateChange: (event) => {
-          if (event.data === window.YT.PlayerState.PLAYING) {
+        events: {
+          onReady: (event) => {
+            console.log('YouTube player ready for video:', video.id);
+            playerRef.current = event.target;
+            playerRef.current.unMute(); // Ensure video is unmuted
+            playerRef.current.setVolume(100); // Set volume to maximum
+            playerRef.current.playVideo();
+            setPlayerReady(true);
             setIsPlaying(true);
-          } else if (event.data === window.YT.PlayerState.PAUSED) {
-            setIsPlaying(false);
-          }
-        },
-        onError: (event) => {
-          console.error('YouTube player error:', event.data);
-          // Try to reinitialize the player after a short delay
-          setTimeout(() => {
-            if (isActive) {
-              initializeYouTubePlayer();
+            setIsMuted(false); // Update state to reflect unmuted status
+          },
+          onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.PLAYING) {
+              setIsPlaying(true);
+            } else if (event.data === window.YT.PlayerState.PAUSED) {
+              setIsPlaying(false);
             }
-          }, 1000);
+          },
+          onError: (event) => {
+            console.error('YouTube player error:', event.data);
+            // Try to reinitialize the player after a short delay
+            setTimeout(() => {
+              if (isActive) {
+                initializeYouTubePlayer();
+              }
+            }, 1000);
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.error('Error creating YouTube player:', error);
+      // Retry initialization after a delay
+      setTimeout(() => {
+        if (isActive) {
+          initializeYouTubePlayer();
+        }
+      }, 1000);
+    }
   };
 
   const togglePlay = () => {
@@ -316,6 +339,42 @@ const VideoCard = ({ video, isActive }: VideoCardProps) => {
   };
 
   const currentSentence = video.sentences?.[currentSentenceIndex]?.text || video.transcript;
+
+  // Handle pausing video when beta access popup is shown
+  useEffect(() => {
+    if (!isActive) return;
+
+    if (isPopupOpen) {
+      // Popup opened - pause video and remember if it was playing
+      if (isYouTubeVideo && playerRef.current && playerReady) {
+        const currentlyPlaying = isPlaying;
+        setWasPlayingBeforePopup(currentlyPlaying);
+        if (currentlyPlaying) {
+          playerRef.current.pauseVideo();
+          setIsPlaying(false);
+        }
+      } else if (!isYouTubeVideo && videoRef.current) {
+        const currentlyPlaying = !videoRef.current.paused;
+        setWasPlayingBeforePopup(currentlyPlaying);
+        if (currentlyPlaying) {
+          videoRef.current.pause();
+          setIsPlaying(false);
+        }
+      }
+    } else {
+      // Popup closed - resume video if it was playing before
+      if (wasPlayingBeforePopup) {
+        if (isYouTubeVideo && playerRef.current && playerReady) {
+          playerRef.current.playVideo();
+          setIsPlaying(true);
+        } else if (!isYouTubeVideo && videoRef.current) {
+          videoRef.current.play().catch(console.error);
+          setIsPlaying(true);
+        }
+        setWasPlayingBeforePopup(false);
+      }
+    }
+  }, [isPopupOpen, isActive, isYouTubeVideo, playerReady, wasPlayingBeforePopup, isPlaying]);
 
   return (
     <div className="relative w-full h-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl overflow-hidden shadow-2xl">

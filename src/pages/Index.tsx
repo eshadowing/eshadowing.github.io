@@ -37,6 +37,13 @@ const Index = () => {
   const handleSwipe = (direction: 'up' | 'down', newIndex: number) => {
     setActiveVideoIndex(newIndex);
     console.log(`Swiped ${direction} to video ${newIndex + 1}`);
+    
+    // Track swipe behavior for specific videos
+    if (newIndex === 1) {
+      trackUserBehavior('swipe_video2');
+    } else if (newIndex === 2) {
+      trackUserBehavior('swipe_video3');
+    }
   };
 
   const handleMicClick = () => {

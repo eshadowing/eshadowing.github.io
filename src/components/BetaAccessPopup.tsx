@@ -8,14 +8,22 @@ import { X, Mail, Gift, CheckCircle } from "lucide-react";
 interface BetaAccessPopupProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenChangeCallback?: (open: boolean) => void;
 }
 
-export const BetaAccessPopup = ({ open, onOpenChange }: BetaAccessPopupProps) => {
+export const BetaAccessPopup = ({ open, onOpenChange, onOpenChangeCallback }: BetaAccessPopupProps) => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [error, setError] = useState("");
+
+  // Notify parent when popup state changes
+  useEffect(() => {
+    if (onOpenChangeCallback) {
+      onOpenChangeCallback(open);
+    }
+  }, [open, onOpenChangeCallback]);
 
   // Check if user is already registered when popup opens
   useEffect(() => {

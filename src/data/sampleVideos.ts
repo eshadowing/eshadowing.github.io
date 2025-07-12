@@ -123,91 +123,136 @@ export const sampleVideos = [
   },
   {
     id: 2,
-    title: "Business English: Meeting Introduction",
-    description: "Learn professional phrases for business meetings",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    transcript: "Good morning everyone. Let me introduce myself. I'm Sarah Johnson from the marketing department.",
+    title: "Faker's Best Play - League of Legends Analysis",
+    description: "Learn from professional gaming commentary and analysis",
+    videoUrl: "https://www.youtube.com/watch?v=2v3C7y5xu84",
+    isYoutube: true,
+    transcript: "Professional gaming analysis showcasing strategic thinking and decision-making",
     sentences: [
-      { 
-        text: "Good morning everyone.", 
-        timestamp: 0,
-        translation: "안녕하세요 여러분."
+      {
+        text: "Let's break down Faker's best RE play of all time, which saved a losing game 5 versus G2.",
+        timestamp: 0.08,
+        translation: "페이커의 역대 최고의 RE 플레이를 분석해 보겠습니다. 이 플레이는 G2와의 5게임에서 지고 있던 경기를 구했습니다."
       },
-      { 
-        text: "Let me introduce myself.", 
-        timestamp: 2,
-        translation: "자기소개를 하겠습니다."
+      {
+        text: "The fight starts off horribly, as Owner immediately dies to Mickey's insane poppy engage.",
+        timestamp: 5.84,
+        translation: "오너가 미키의 놀라운 포피 이니시에 즉시 죽으면서 싸움이 끔찍하게 시작됩니다."
       },
-      { 
-        text: "I'm Sarah Johnson from the marketing department.", 
-        timestamp: 5,
-        translation: "저는 마케팅 부서의 사라 존슨입니다."
+      {
+        text: "G2 presses forward with Zach going extremely aggressive, and Cassante alts him away to save the team.",
+        timestamp: 10.88,
+        translation: "G2가 자크가 극도로 공격적으로 나가면서 전진하고, 카산테가 그를 밀어내어 팀을 구합니다."
+      },
+      {
+        text: "Great players are always thinking about where their opponent's attention is and where they're not looking at.",
+        timestamp: 16.24,
+        translation: "훌륭한 플레이어들은 항상 상대방의 관심이 어디에 있고 어디를 보지 않는지에 대해 생각합니다."
+      },
+      {
+        text: "Faker knows everyone is watching the tank fight over here now, and he's going to exploit that.",
+        timestamp: 20.64,
+        translation: "페이커는 모든 사람이 지금 여기서 탱커 싸움을 보고 있다는 것을 알고, 그것을 이용할 것입니다."
+      },
+      {
+        text: "He wards over the walls, scouting their rotation, and then he alts in 1 versus 4.",
+        timestamp: 24.84,
+        translation: "그는 벽 너머에 와드를 박고 그들의 로테이션을 정찰한 다음, 1대4로 알트를 시전합니다."
+      },
+      {
+        text: "Before G2 even realize what's going on.",
+        timestamp: 29.04,
+        translation: "G2가 무슨 일이 일어나고 있는지 깨닫기도 전에."
+      },
+      {
+        text: "You can literally see how caught off guard they are.",
+        timestamp: 31.28,
+        translation: "그들이 얼마나 당황했는지 말 그대로 볼 수 있습니다."
+      },
+      {
+        text: "Hans-sama doesn't react to the charm while Caps and Mickey were clearly not expecting this as they panic instead of peeling.",
+        timestamp: 33.44,
+        translation: "한스 사마는 매혹에 반응하지 않고, 캡스와 미키는 분명히 이것을 예상하지 못했기 때문에 보호하는 대신 패닉 상태가 됩니다."
+      },
+      {
+        text: "By the time they realize they should be turning, Hans is already dead and Faker barely gets away before their spells would have stunned and killed him.",
+        timestamp: 38.88,
+        translation: "그들이 돌아서야 한다는 것을 깨달았을 때, 한스는 이미 죽었고 페이커는 그들의 스펠이 그를 기절시키고 죽이기 전에 간신히 도망칩니다."
+      },
+      {
+        text: "Faker then turns to chase but gets pushed away.",
+        timestamp: 45.04,
+        translation: "페이커는 그 다음 추격을 위해 돌아서지만 밀려납니다."
+      },
+      {
+        text: "He immediately teleports to cut them off and look at this patience.",
+        timestamp: 47.04,
+        translation: "그는 즉시 텔레포트로 그들을 차단하고 이 인내심을 보세요."
+      },
+      {
+        text: "Faker knows Caps is watching the fight and didn't see the teleport.",
+        timestamp: 49.84,
+        translation: "페이커는 캡스가 싸움을 보고 있어서 텔레포트를 보지 못했다는 것을 알고 있습니다."
+      },
+      {
+        text: "So he just waits patiently for Caps to face check into the charm, winning the fight.",
+        timestamp: 52.76,
+        translation: "그래서 그는 캡스가 매혹에 페이스 체크하기를 참을성 있게 기다리며 싸움에서 승리합니다."
+      },
+      {
+        text: "And that's how Faker single-handedly saved a lost game.",
+        timestamp: 56.36,
+        translation: "그리고 이것이 페이커가 혼자서 져가던 게임을 구한 방법입니다."
+      }
+    ],
+    difficulty: "Advanced",
+    duration: "1:00"
+  },
+  {
+    id: 3,
+    title: "Lamin Yamal - Football Commentary",
+    description: "Learn from sports commentary and inspirational narration",
+    videoUrl: "https://www.youtube.com/watch?v=ujp2AWuVB8o",
+    isYoutube: true,
+    transcript: "Sports commentary about young football talent and achievement",
+    sentences: [
+      {
+        text: "And there is the little boy becoming a man.",
+        timestamp: 0.4,
+        translation: "그리고 여기 어린 소년이 어른이 되고 있습니다."
+      },
+      {
+        text: "Lamin Yamal, what a story.",
+        timestamp: 4.64,
+        translation: "라민 야말, 정말 놀라운 이야기네요."
+      },
+      {
+        text: "Sixteen.",
+        timestamp: 7.28,
+        translation: "열여섯 살."
+      },
+      {
+        text: "What were you doing when you were sixteen?",
+        timestamp: 9.04,
+        translation: "당신은 열여섯 살 때 무엇을 하고 있었나요?"
+      },
+      {
+        text: "Modric could be his father.",
+        timestamp: 13.44,
+        translation: "모드리치는 그의 아버지가 될 수 있을 나이입니다."
+      },
+      {
+        text: "Young and innovative.",
+        timestamp: 15.84,
+        translation: "젊고 혁신적입니다."
+      },
+      {
+        text: "Maybe just the beginning for Spain.",
+        timestamp: 17.08,
+        translation: "아마도 스페인에게는 시작일 뿐일 것입니다."
       }
     ],
     difficulty: "Intermediate",
     duration: "0:20"
-  },
-  {
-    id: 3,
-    title: "Travel Phrases: Asking for Directions",
-    description: "Essential phrases for getting around in a new city",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    transcript: "Excuse me, could you tell me how to get to the train station? Is it walking distance from here?",
-    sentences: [
-      { 
-        text: "Excuse me, could you tell me how to get to the train station?", 
-        timestamp: 0,
-        translation: "실례합니다, 기차역까지 어떻게 가는지 알려주실 수 있나요?"
-      },
-      { 
-        text: "Is it walking distance from here?", 
-        timestamp: 4,
-        translation: "여기서 걸어갈 수 있는 거리인가요?"
-      }
-    ],
-    difficulty: "Beginner",
-    duration: "0:18"
-  },
-  {
-    id: 4,
-    title: "Academic English: Presentation Skills",
-    description: "Practice formal presentation language",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    transcript: "Today I'm going to present our research findings on sustainable energy solutions for urban environments.",
-    sentences: [
-      { 
-        text: "Today I'm going to present our research findings", 
-        timestamp: 0,
-        translation: "오늘은 저희 연구 결과를 발표하겠습니다"
-      },
-      { 
-        text: "on sustainable energy solutions for urban environments.", 
-        timestamp: 4,
-        translation: "도시 환경을 위한 지속 가능한 에너지 솔루션에 대해서요."
-      }
-    ],
-    difficulty: "Advanced",
-    duration: "0:25"
-  },
-  {
-    id: 5,
-    title: "Casual Chat: Weekend Plans",
-    description: "Natural conversation about leisure activities",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    transcript: "What are you doing this weekend? I was thinking of going hiking if the weather's nice.",
-    sentences: [
-      { 
-        text: "What are you doing this weekend?", 
-        timestamp: 0,
-        translation: "이번 주말에 뭐 하세요?"
-      },
-      { 
-        text: "I was thinking of going hiking if the weather's nice.", 
-        timestamp: 3,
-        translation: "날씨가 좋으면 하이킹을 가려고 생각하고 있어요."
-      }
-    ],
-    difficulty: "Intermediate",
-    duration: "0:16"
   }
 ];

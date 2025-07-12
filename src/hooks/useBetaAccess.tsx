@@ -5,6 +5,7 @@ import { BetaAccessPopup } from "@/components/BetaAccessPopup";
 interface BetaAccessContextType {
   showBetaPopup: () => void;
   trackButtonClick: (buttonName: string, additionalData?: Record<string, string>) => void;
+  isPopupOpen: boolean;
 }
 
 const BetaAccessContext = createContext<BetaAccessContextType | undefined>(undefined);
@@ -23,6 +24,7 @@ interface BetaAccessProviderProps {
 
 export const BetaAccessProvider = ({ children }: BetaAccessProviderProps) => {
   const [showPopup, setShowPopup] = useState(true); // Show popup by default when app loads
+  const [isPopupOpen, setIsPopupOpen] = useState(true); // Track actual popup open state
 
   const showBetaPopup = () => {
     setShowPopup(true);
@@ -44,12 +46,18 @@ export const BetaAccessProvider = ({ children }: BetaAccessProviderProps) => {
     showBetaPopup();
   };
 
+  const handlePopupOpenChange = (open: boolean) => {
+    setShowPopup(open);
+    setIsPopupOpen(open);
+  };
+
   return (
-    <BetaAccessContext.Provider value={{ showBetaPopup, trackButtonClick }}>
+    <BetaAccessContext.Provider value={{ showBetaPopup, trackButtonClick, isPopupOpen }}>
       {children}
       <BetaAccessPopup 
         open={showPopup} 
-        onOpenChange={setShowPopup}
+        onOpenChange={handlePopupOpenChange}
+        onOpenChangeCallback={setIsPopupOpen}
       />
     </BetaAccessContext.Provider>
   );

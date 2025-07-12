@@ -65,6 +65,32 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
   const isYouTubeVideo = video.isYoutube && video.videoUrl.includes('youtube.com');
   const youtubeVideoId = isYouTubeVideo ? getYouTubeVideoId(video.videoUrl) : null;
 
+  // Force enable autoplay with sound by creating a user gesture
+  useEffect(() => {
+    // Create a global audio context to enable sound
+    const enableAudio = () => {
+      try {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioContext.resume();
+        
+        // Create a silent audio element to establish user interaction
+        const silentAudio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+        silentAudio.play().catch(() => {});
+        
+        // For mobile Safari, we need to trigger this differently
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          document.addEventListener('touchstart', () => {
+            silentAudio.play().catch(() => {});
+          }, { once: true });
+        }
+      } catch (error) {
+        console.warn('Could not enable audio context:', error);
+      }
+    };
+    
+    enableAudio();
+  }, []);
+
   useEffect(() => {
     if (!isYouTubeVideo && videoRef.current) {
       if (isActive) {
@@ -178,6 +204,20 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
   useEffect(() => {
     // Load YouTube API
     if (isYouTubeVideo && isActive && youtubeVideoId) {
+      // Simulate user interaction to bypass autoplay restrictions
+      const simulateUserInteraction = () => {
+        // Create a fake touch/click event to satisfy browser requirements
+        const fakeEvent = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        });
+        document.dispatchEvent(fakeEvent);
+      };
+      
+      // Call immediately and also set up the player
+      simulateUserInteraction();
+      
       // Add a small delay to ensure DOM is ready
       const timer = setTimeout(() => {
         if (!window.YT) {
@@ -236,7 +276,7 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
     setPlayerReady(false);
     setIsPlaying(false);
     
-    // Create new player
+    // Create new player with aggressive autoplay settings
     try {
       playerRef.current = new window.YT.Player(`youtube-player-${video.id}`, {
         videoId: youtubeVideoId,
@@ -250,24 +290,58 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
           iv_load_policy: 3,
           fs: 0,
           disablekb: 1,
-          mute: 0, // Explicitly set to unmuted (0)
+          mute: 0, // Start unmuted
           enablejsapi: 1,
-          playsinline: 1
+          playsinline: 1,
+          // Additional parameters to force autoplay
+          start: 0,
+          end: 0,
+          origin: window.location.origin,
+          widget_referrer: window.location.href
         },
         events: {
           onReady: (event) => {
             console.log('YouTube player ready for video:', video.id);
             playerRef.current = event.target;
-            playerRef.current.unMute(); // Ensure video is unmuted
-            playerRef.current.setVolume(100); // Set volume to maximum
-            playerRef.current.playVideo();
-            setPlayerReady(true);
-            setIsPlaying(true);
-            setIsMuted(false); // Update state to reflect unmuted status
+            
+            // Aggressive unmute and play sequence
+            try {
+              playerRef.current.unMute();
+              playerRef.current.setVolume(100);
+              
+              // Multiple attempts to ensure playback with sound
+              setTimeout(() => {
+                playerRef.current.playVideo();
+                playerRef.current.unMute();
+                setPlayerReady(true);
+                setIsPlaying(true);
+                setIsMuted(false);
+              }, 100);
+              
+              // Backup attempt
+              setTimeout(() => {
+                if (playerRef.current) {
+                  playerRef.current.playVideo();
+                  playerRef.current.unMute();
+                }
+              }, 500);
+              
+            } catch (error) {
+              console.warn('Error in onReady sequence:', error);
+              // Fallback
+              playerRef.current.playVideo();
+              setPlayerReady(true);
+              setIsPlaying(true);
+            }
           },
           onStateChange: (event) => {
             if (event.data === window.YT.PlayerState.PLAYING) {
               setIsPlaying(true);
+              // Ensure audio is unmuted when playing starts
+              if (playerRef.current) {
+                playerRef.current.unMute();
+                setIsMuted(false);
+              }
             } else if (event.data === window.YT.PlayerState.PAUSED) {
               setIsPlaying(false);
             }
@@ -413,11 +487,25 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
           src={video.videoUrl}
           loop
           playsInline
+          autoPlay
+          muted={false}
+          controls={false}
+          preload="auto"
           onClick={togglePlay}
           onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
           onLoadedMetadata={() => {
             // Ensure video is ready when metadata loads
             if (isActive && videoRef.current) {
+              videoRef.current.muted = false; // Force unmute
+              videoRef.current.volume = 1; // Set volume to max
+              videoRef.current.play().catch(console.error);
+            }
+          }}
+          onCanPlay={() => {
+            // Try to play when video can play
+            if (isActive && videoRef.current) {
+              videoRef.current.muted = false;
+              videoRef.current.volume = 1;
               videoRef.current.play().catch(console.error);
             }
           }}

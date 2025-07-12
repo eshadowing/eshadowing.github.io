@@ -15,6 +15,54 @@ const Index = () => {
   const [sentencePopupVideoData, setSentencePopupVideoData] = useState<any>(null);
   const videoCardsRef = useRef<{ [key: number]: VideoCardRef | null }>({});
 
+  // Global audio context setup to enable autoplay with sound
+  useEffect(() => {
+    const setupGlobalAudio = () => {
+      try {
+        // Create and resume audio context immediately
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioContext.resume();
+        
+        // Create multiple silent audio elements to establish user interaction
+        const createSilentAudio = () => {
+          const silentAudio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+          silentAudio.volume = 0;
+          silentAudio.play().catch(() => {});
+          return silentAudio;
+        };
+        
+        // Try multiple approaches
+        createSilentAudio();
+        
+        // Schedule more attempts
+        setTimeout(createSilentAudio, 100);
+        setTimeout(createSilentAudio, 500);
+        
+        // Force enable on any user interaction
+        const enableAudioOnInteraction = () => {
+          createSilentAudio();
+          audioContext.resume();
+        };
+        
+        document.addEventListener('touchstart', enableAudioOnInteraction, { once: true });
+        document.addEventListener('click', enableAudioOnInteraction, { once: true });
+        document.addEventListener('keydown', enableAudioOnInteraction, { once: true });
+        
+        // Cleanup
+        return () => {
+          document.removeEventListener('touchstart', enableAudioOnInteraction);
+          document.removeEventListener('click', enableAudioOnInteraction);
+          document.removeEventListener('keydown', enableAudioOnInteraction);
+        };
+      } catch (error) {
+        console.warn('Could not setup global audio context:', error);
+      }
+    };
+    
+    const cleanup = setupGlobalAudio();
+    return cleanup;
+  }, []);
+
   // Advanced video preloading
   useEffect(() => {
     setIsPreloading(true);

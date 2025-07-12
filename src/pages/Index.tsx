@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import { sampleVideos } from '@/data/sampleVideos';
 import { videoPreloader } from '@/utils/videoPreloader';
 import { trackUserBehavior } from '@/utils/tracking';
+import { useTranslation } from '@/lib/i18n';
 
 const Index = () => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
@@ -14,6 +15,7 @@ const Index = () => {
   const [showSentencePopup, setShowSentencePopup] = useState(false);
   const [sentencePopupVideoData, setSentencePopupVideoData] = useState<any>(null);
   const videoCardsRef = useRef<{ [key: number]: VideoCardRef | null }>({});
+  const { t } = useTranslation();
 
   // Global audio context setup to enable autoplay with sound
   useEffect(() => {
@@ -169,7 +171,7 @@ const Index = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end z-[60]">
           <div className="w-full bg-black/90 backdrop-blur-lg rounded-t-2xl p-6 pb-safe mb-0 max-h-2/3 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">All Sentences - {sentencePopupVideoData.title}</h3>
+              <h3 className="text-lg font-semibold text-white">{t('video.allSentences')} - {sentencePopupVideoData.title}</h3>
               <button 
                 onClick={() => setShowSentencePopup(false)}
                 className="text-white/70 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10"

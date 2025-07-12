@@ -2,6 +2,7 @@ import { Home, User, BarChart3, MessageCircle, Mic, MicOff } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/TrackedButton';
 import { useEffect, useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 interface BottomNavProps {
   showMicButton?: boolean;
@@ -12,6 +13,7 @@ interface BottomNavProps {
 const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: BottomNavProps) => {
   const location = useLocation();
   const [scrollPosition, setScrollPosition] = useState(0);
+  const { t } = useTranslation();
   
   // Track scroll position to create parallax effect for the glass
   useEffect(() => {
@@ -24,10 +26,10 @@ const BottomNav = ({ showMicButton = false, isListening = false, onMicClick }: B
   }, []);
   
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
-    { path: '/chat', icon: MessageCircle, label: 'Chat' },
-    { path: '/progress', icon: BarChart3, label: 'Progress' },
-    { path: '/profile', icon: User, label: 'Profile' },
+    { path: '/', icon: Home, label: t('navigation.home') },
+    { path: '/chat', icon: MessageCircle, label: t('navigation.chat') },
+    { path: '/progress', icon: BarChart3, label: t('navigation.progress') },
+    { path: '/profile', icon: User, label: t('navigation.profile') },
   ];
 
   return (

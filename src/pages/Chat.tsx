@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { trackUserBehavior } from '@/utils/tracking';
 import BottomNav from '@/components/BottomNav';
+import { useTranslation } from '@/lib/i18n';
 
 // Extend Window interface for speech recognition
 declare global {
@@ -28,15 +29,6 @@ interface Topic {
   color: string;
 }
 
-const predefinedTopics: Topic[] = [
-  { id: 1, title: "Language Learning", description: "Practice conversations in different languages", color: "bg-blue-500" },
-  { id: 2, title: "Coding Help", description: "Get help with programming questions", color: "bg-green-500" },
-  { id: 3, title: "Career Advice", description: "Discuss career goals and professional development", color: "bg-purple-500" },
-  { id: 4, title: "Travel Planning", description: "Plan your next adventure", color: "bg-orange-500" },
-  { id: 5, title: "Health & Fitness", description: "Discuss wellness and fitness goals", color: "bg-red-500" },
-  { id: 6, title: "Creative Writing", description: "Brainstorm ideas and improve your writing", color: "bg-pink-500" },
-];
-
 const Chat = () => {
   const navigate = useNavigate();
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
@@ -45,6 +37,16 @@ const Chat = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const { t } = useTranslation();
+
+  const predefinedTopics: Topic[] = [
+    { id: 1, title: t('chat.topics.languageLearning'), description: t('chat.topics.languageLearningDesc'), color: "bg-blue-500" },
+    { id: 2, title: t('chat.topics.codingHelp'), description: t('chat.topics.codingHelpDesc'), color: "bg-green-500" },
+    { id: 3, title: t('chat.topics.careerAdvice'), description: t('chat.topics.careerAdviceDesc'), color: "bg-purple-500" },
+    { id: 4, title: t('chat.topics.travelPlanning'), description: t('chat.topics.travelPlanningDesc'), color: "bg-orange-500" },
+    { id: 5, title: t('chat.topics.healthFitness'), description: t('chat.topics.healthFitnessDesc'), color: "bg-red-500" },
+    { id: 6, title: t('chat.topics.creativeWriting'), description: t('chat.topics.creativeWritingDesc'), color: "bg-pink-500" },
+  ];
 
   useEffect(() => {
     // Track user behavior when chat page opens
@@ -171,7 +173,7 @@ const Chat = () => {
                 <h1 className="text-lg font-semibold">{selectedTopic.title}</h1>
               </>
             )}
-            {!selectedTopic && <h1 className="text-lg font-semibold">AI Voice Chat</h1>}
+            {!selectedTopic && <h1 className="text-lg font-semibold">{t('chat.title')}</h1>}
           </div>
           <div className="w-8" />
         </div>
@@ -182,7 +184,7 @@ const Chat = () => {
             <Input
               value={customTopic}
               onChange={(e) => setCustomTopic(e.target.value)}
-              placeholder="Enter a topic..."
+              placeholder={t('chat.enterTopic')}
               className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
               onKeyPress={handleKeyPress}
               onFocus={() => setIsSearchFocused(true)}
@@ -194,7 +196,7 @@ const Chat = () => {
               className="bg-blue-600 hover:bg-blue-700"
               disabled={!customTopic.trim()}
             >
-              Start
+              {t('chat.start')}
             </Button>
           </div>
         </div>
@@ -204,7 +206,7 @@ const Chat = () => {
           {(!selectedTopic || (selectedTopic && isSearchFocused)) ? (
             /* Popular Topics - Only show when no topic selected */
             <div className="p-4 space-y-3 pb-32 pb-safe">
-              <h2 className="text-sm font-medium text-gray-300">Popular Topics</h2>
+              <h2 className="text-sm font-medium text-gray-300">{t('chat.popularTopics')}</h2>
               <div className="grid gap-3">
                 {predefinedTopics.map((topic) => (
                   <div
@@ -246,7 +248,7 @@ const Chat = () => {
               {isListening && (
                 <div className="flex justify-center">
                   <div className="bg-red-600/20 backdrop-blur-sm text-white border border-red-500/30 rounded-xl px-4 py-2">
-                    <p className="text-sm animate-pulse">Listening...</p>
+                    <p className="text-sm animate-pulse">{t('chat.listening')}</p>
                   </div>
                 </div>
               )}

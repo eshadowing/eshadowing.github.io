@@ -3,6 +3,7 @@ import { Volume2, Heart, MessageCircle, Share, ChevronUp, VolumeX } from 'lucide
 import { Button } from '@/components/ui/button';
 import { useBetaAccess } from '@/hooks/useBetaAccess';
 import { trackUserBehavior } from '@/utils/tracking';
+import { useTranslation } from '@/lib/i18n';
 
 // Add YouTube Player type for TypeScript
 declare global {
@@ -25,7 +26,7 @@ interface VideoCardProps {
     description: string;
     videoUrl: string;
     transcript: string;
-    sentences: Array<{ text: string; timestamp: number; translation?: string }>;
+    sentences: Array<{ text: string; timestamp: number; translations?: { ko?: string; vi?: string } }>;
     difficulty: string;
     duration: string;
     isYoutube?: boolean;
@@ -47,6 +48,7 @@ const getYouTubeVideoId = (url: string): string | null => {
 
 const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, onSentenceClick }, ref) => {
   const { trackButtonClick, isPopupOpen } = useBetaAccess();
+  const { currentLanguage } = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -569,9 +571,9 @@ const VideoCard = forwardRef<VideoCardRef, VideoCardProps>(({ video, isActive, o
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 {/* Translation (above subtitle) */}
-                {video.sentences?.[currentSentenceIndex]?.translation && (
+                {video.sentences?.[currentSentenceIndex]?.translations?.[currentLanguage] && (
                   <p className="text-sm leading-relaxed text-blue-200 mb-2 opacity-90">
-                    {video.sentences[currentSentenceIndex].translation}
+                    {video.sentences[currentSentenceIndex].translations[currentLanguage]}
                   </p>
                 )}
                 {/* Original subtitle */}

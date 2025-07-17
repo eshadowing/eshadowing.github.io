@@ -15,7 +15,7 @@ const Index = () => {
   const [showSentencePopup, setShowSentencePopup] = useState(false);
   const [sentencePopupVideoData, setSentencePopupVideoData] = useState<any>(null);
   const videoCardsRef = useRef<{ [key: number]: VideoCardRef | null }>({});
-  const { t } = useTranslation();
+  const { t, currentLanguage } = useTranslation();
 
   // Global audio context setup to enable autoplay with sound
   useEffect(() => {
@@ -195,9 +195,9 @@ const Index = () => {
                     </span>
                     <span className="text-sm leading-relaxed">{sentence.text}</span>
                   </div>
-                  {sentence.translation && (
+                  {sentence.translations?.[currentLanguage] && (
                     <p className="text-xs text-blue-200 mt-1 ml-11 opacity-80">
-                      {sentence.translation}
+                      {sentence.translations[currentLanguage]}
                     </p>
                   )}
                 </button>

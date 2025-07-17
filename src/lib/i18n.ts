@@ -1,5 +1,5 @@
 // Internationalization system for the app
-export type Language = 'en' | 'ko';
+export type Language = 'en' | 'ko' | 'vi';
 
 export interface Translations {
   // Beta Access Popup
@@ -298,6 +298,100 @@ export const translations: Record<Language, Translations> = {
       sentencesCompleted: '완료된 문장',
     },
   },
+  vi: {
+    betaAccess: {
+      title: 'Truy cập sớm',
+      alreadyRegistered: '🎉 Bạn đã đăng ký rồi!',
+      alreadyRegisteredDesc: 'Tin tốt lành! Bạn đã bảo đảm vị trí trong danh sách beta và nhận được giảm giá 100%!',
+      registeredEmail: '📧 Email đã đăng ký:',
+      notifyLaunch: 'Chúng tôi sẽ thông báo ngay khi ứng dụng chính thức ra mắt. Tài khoản premium của bạn sẽ hoàn toàn miễn phí!',
+      discountSecured: '✅ Giảm giá 100% đã được bảo đảm',
+      gotIt: 'Đã hiểu! 👍',
+      demoNotice: '🚀 Đây là phiên bản demo – không phải phiên bản cuối cùng của ứng dụng.',
+      tryBuilding: 'Muốn xem chúng tôi đang xây dựng gì? Hãy thử ngay!',
+      earlyAccessInterest: 'Nếu bạn quan tâm đến việc có quyền truy cập sớm:',
+      joinWaitlist: '👉 Nhập email để tham gia danh sách chờ Beta',
+      exclusiveOffer: 'ƯU ĐÃI ĐỘC QUYỀN',
+      discount100: 'GIẢM GIÁ 100%',
+      first100People: '🎁 100 người đầu tiên đăng ký sẽ nhận được giảm giá 100% cho tài khoản Premium sau khi ra mắt chính thức!',
+      emailAddress: 'Địa chỉ Email',
+      emailPlaceholder: 'Nhập email để truy cập sớm...',
+      joining: 'Đang tham gia...',
+      joinBetaWaitlist: '🚀 Tham gia danh sách chờ Beta',
+      welcomeWaitlist: '🎉 Chào mừng bạn đến với danh sách chờ Beta!',
+      welcomeWaitlistDesc: 'Bạn đã được thêm vào danh sách chờ beta độc quyền. Chúng tôi sẽ thông báo khi ứng dụng ra mắt cùng với giảm giá 100% của bạn!',
+      earlyAccessSecured: '✨ Truy cập sớm đã được bảo đảm',
+      errorMessage: 'Đã xảy ra lỗi. Vui lòng thử lại.',
+    },
+    navigation: {
+      home: 'Trang chủ',
+      chat: 'Trò chuyện',
+      progress: 'Tiến trình',
+      profile: 'Hồ sơ',
+    },
+    chat: {
+      title: 'Trò chuyện bằng giọng nói AI',
+      enterTopic: 'Nhập chủ đề...',
+      start: 'Bắt đầu',
+      popularTopics: 'Chủ đề phổ biến',
+      listening: 'Đang nghe...',
+      topics: {
+        languageLearning: 'Học ngôn ngữ',
+        languageLearningDesc: 'Luyện tập hội thoại bằng các ngôn ngữ khác nhau',
+        codingHelp: 'Trợ giúp lập trình',
+        codingHelpDesc: 'Nhận trợ giúp về các câu hỏi lập trình',
+        careerAdvice: 'Tư vấn nghề nghiệp',
+        careerAdviceDesc: 'Thảo luận về mục tiêu nghề nghiệp và phát triển chuyên môn',
+        travelPlanning: 'Lập kế hoạch du lịch',
+        travelPlanningDesc: 'Lên kế hoạch cho cuộc phiêu lưu tiếp theo',
+        healthFitness: 'Sức khỏe & Thể hình',
+        healthFitnessDesc: 'Thảo luận về sức khỏe và mục tiêu thể hình',
+        creativeWriting: 'Viết sáng tạo',
+        creativeWritingDesc: 'Động não ý tưởng và cải thiện kỹ năng viết',
+      },
+    },
+    profile: {
+      title: 'Hồ sơ của bạn',
+      subtitle: 'Tiến trình học ngôn ngữ',
+      likes: 'Lượt thích',
+      videos: 'Video',
+      uploadVideo: 'Tải lên video',
+      shareSubtitle: 'Chia sẻ luyện tập shadowing và giúp đỡ người khác học tập!',
+      chooseVideoFile: 'Chọn file video',
+      importYoutube: 'Nhập từ liên kết Youtube',
+      yourVideos: 'Video của bạn',
+    },
+    progress: {
+      title: 'Tiến trình của bạn',
+      subtitle: 'Theo dõi hành trình shadowing',
+      totalPractice: 'Tổng thời gian luyện tập',
+      pronunciationScore: 'Điểm phát âm',
+      overallAccuracy: 'Độ chính xác tổng thể',
+      improvementWeek: 'Cải thiện +5% tuần này!',
+      thisWeek: 'Tuần này',
+      dailyGoal: 'Mục tiêu hàng ngày',
+      days: 'ngày',
+      sentencesShadowed: 'Câu đã shadow',
+      sentences: 'câu',
+      recentAchievements: 'Thành tích gần đây',
+      achievements: {
+        sevenDayStreak: 'Chuỗi 7 ngày',
+        sevenDayStreakDesc: 'Luyện tập mỗi ngày trong tuần',
+        pronunciationPro: 'Chuyên gia phát âm',
+        pronunciationProDesc: 'Đạt điểm 90%+ cho 5 câu',
+        fastLearner: 'Người học nhanh',
+        fastLearnerDesc: 'Hoàn thành 10 câu trong 24 giờ',
+      },
+    },
+    video: {
+      preloading: 'Đang tải trước...',
+      allSentences: 'Tất cả câu',
+    },
+    common: {
+      close: 'Đóng',
+      sentencesCompleted: 'Câu đã hoàn thành',
+    },
+  },
 };
 
 // Language detection and management
@@ -312,8 +406,10 @@ class I18nManager {
     // Get user's browser language
     const browserLang = navigator.language || navigator.languages[0];
     
-    // Check if Korean
-    if (browserLang.startsWith('ko')) {
+    // Check language preference
+    if (browserLang.startsWith('vi')) {
+      this.currentLanguage = 'vi';
+    } else if (browserLang.startsWith('ko')) {
       this.currentLanguage = 'ko';
     } else {
       this.currentLanguage = 'en';
@@ -321,7 +417,7 @@ class I18nManager {
     
     // Check localStorage for saved preference
     const savedLang = localStorage.getItem('preferred-language') as Language;
-    if (savedLang && (savedLang === 'en' || savedLang === 'ko')) {
+    if (savedLang && (savedLang === 'en' || savedLang === 'ko' || savedLang === 'vi')) {
       this.currentLanguage = savedLang;
     }
   }
@@ -333,6 +429,9 @@ class I18nManager {
   public setLanguage(lang: Language): void {
     this.currentLanguage = lang;
     localStorage.setItem('preferred-language', lang);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
   }
   
   public t(path: string): string {
